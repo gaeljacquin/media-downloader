@@ -3,6 +3,8 @@
   <br>
   yt-dlp GUI
   <br>
+
+  [![publish](https://github.com/gaeljacquin/yt-dlp-gui/actions/workflows/publish.yml/badge.svg)](https://github.com/gaeljacquin/yt-dlp-gui/actions/workflows/publish.yml)
 </h1>
 
 <h3 align="center">
@@ -11,6 +13,7 @@
 
 ## Features
 - Portable; installers also available
+- Free and open source
 - Hide in system tray
 - Custom and persistent save location
 - 'Audio only' option
@@ -30,11 +33,12 @@
 ### Install
 Get the binaries [here](https://github.com/gaeljacquin/yt-dlp-gui/releases).
 
-The [yt-dlp binary](https://github.com/yt-dlp/yt-dlp/releases) is bundled with the installers, not the portable version. If using the portable version, place it in the same directory.
+The [yt-dlp binary](https://github.com/yt-dlp/yt-dlp/releases) is bundled with the installers, and not the portable Windows version. If using the latter, place both binaries in the same directory.
 
 ### Compile
-Run `pnpm tauri build --target x86_64-pc-windows-msvc`; change target according to platform.
+Run `pnpm tauri build --target $PLATFORM`.
 
 Add the [yt-dlp binary](https://github.com/yt-dlp/yt-dlp/releases) to `src/tauri/binaries` and rename it according to platform.
 
-**NOTE: I only tested it on Windows 11, but it should build on Linux and macOS too.**
+### Important notes
+**Builds and installers were only tested on Windows 11.**
