@@ -4,7 +4,7 @@
   yt-dlp GUI
   <br>
 
-  [![publish](https://github.com/gaeljacquin/yt-dlp-gui/actions/workflows/publish.yml/badge.svg)](https://github.com/gaeljacquin/yt-dlp-gui/actions/workflows/publish.yml)
+  [![publish](https://github.com/gaeljacquin/yt-dlp-gui/actions/workflows/ci.yml/badge.svg)](https://github.com/gaeljacquin/yt-dlp-gui/actions/workflows/ci.yml)
 </h1>
 
 <h3 align="center">
