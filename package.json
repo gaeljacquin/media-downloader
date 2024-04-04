@@ -3,7 +3,7 @@
   "title": "yt-dlp GUI",
   "description": "A cross platform GUI for yt-dlp built with Tauri",
   "author": "Gaël Jacquin",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
