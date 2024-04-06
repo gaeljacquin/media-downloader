@@ -2,23 +2,15 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 use tauri::{
-  CustomMenuItem, Manager, Menu, MenuItem, Submenu, SystemTray, SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem
+  CustomMenuItem, Manager, SystemTray, SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem, Window
 };
 
+#[tauri::command]
+fn hide_system_tray(window: Window) {
+  window.hide().unwrap();
+}
+
 fn main() {
-  let quit = MenuItem::Quit;
-  let toggle = CustomMenuItem::new("toggle".to_string(), "Hide");
-  let separator = MenuItem::Separator;
-  let file_submenu = Submenu::new(
-    "File",
-    Menu::new()
-      .add_item(toggle)
-      .add_native_item(separator)
-      .add_native_item(quit)
-  );
-  let menu = Menu::new()
-    .add_submenu(file_submenu)
-  ;
   let quit_tray = CustomMenuItem::new("quit".to_string(), "Quit");
   let toggle_tray = CustomMenuItem::new("toggle".to_string(), "Hide");
   let tray_menu = SystemTrayMenu::new()
@@ -29,15 +21,6 @@ fn main() {
   let system_tray = SystemTray::new().with_menu(tray_menu);
 
   tauri::Builder::default()
-    .menu(menu)
-      .on_menu_event(|event| {
-      match event.menu_item_id() {
-        "toggle" => {
-          event.window().hide().unwrap();
-        }
-        _ => {}
-      }
-    })
     .system_tray(system_tray)
     .on_system_tray_event(|app, event| match event {
       SystemTrayEvent::DoubleClick {
@@ -86,6 +69,7 @@ fn main() {
       }
       _ => {}
     })
+    .invoke_handler(tauri::generate_handler![hide_system_tray])
     .run(tauri::generate_context!())
     .expect("error while running tauri application")
   ;
