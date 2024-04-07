@@ -5,9 +5,11 @@ import Image from "next/image";
 import { icons } from "@/app/components/icons";
 import { Button } from "@/app/components/ui/button";
 import { TooltipTrigger, TooltipContent, Tooltip, TooltipProvider } from "@/app/components/ui/tooltip";
+import { View, useView } from '@/app/contexts/view';
 
 export default function ActivityBar() {
-  const { HomeIcon, EyeOffIcon } = icons;
+  const { Settings2Icon, HomeIcon, EyeOffIcon } = icons;
+  const { view, switchView } = useView();
 
   const invokeHideSystemTray = async () => {
     const { invoke } = await import('@tauri-apps/api/tauri');
@@ -30,12 +32,34 @@ export default function ActivityBar() {
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button aria-label="Main" className="rounded-lg bg-muted" size="icon" variant="ghost">
+              <Button
+                aria-label="Main"
+                className={`rounded-lg ${view === View.Home && 'bg-muted'}`}
+                size="icon"
+                variant="ghost"
+                onClick={() => view !== View.Home ? switchView(View.Home) : null}
+              >
                 <HomeIcon className="h-5 w-5" />
               </Button>
             </TooltipTrigger>
             <TooltipContent side="right" sideOffset={5}>
               Home
+            </TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                aria-label="Settings"
+                className={`rounded-lg ${view === View.Settings && 'bg-muted'}`}
+                size="icon"
+                variant="ghost"
+                onClick={() => view !== View.Settings ? switchView(View.Settings) : null}
+              >
+                <Settings2Icon className="size-5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="right" sideOffset={5}>
+              Settings
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>

@@ -1,6 +1,6 @@
-import { FormInput } from "@/app/types/form-input";
+import { MainForm } from "@/app/types/form";
 
-export function addOptions(data: FormInput) {
+export function addOptions(data: MainForm) {
   let res = [];
 
   if (data.audio_only) {
