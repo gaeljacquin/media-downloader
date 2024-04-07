@@ -1,29 +1,29 @@
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 
-interface FormStore {
+interface SettingsStore {
   downloadLocation: string
   setDownloadLocation: (arg0: string) => void
 }
 
-export const defaultFormState = {
+export const defaultSettingsState = {
   downloadLocation: '',
-  setDownloadLocation: null
+  setDownloadLocation: () => null,
 }
 
-const useFormStore = create<FormStore>()(
+const useSettingsStore = create<SettingsStore>()(
   persist(
     devtools(
       (set) => ({
-        ...defaultFormState,
+        ...defaultSettingsState,
         setDownloadLocation: (path: string) => {
           set({ downloadLocation: path })
-        }
+        },
       }),
     ), {
-      name: 'FormStore',
+      name: 'SettingsStore',
     }
   )
 );
 
-export default useFormStore;
+export default useSettingsStore;

@@ -6,6 +6,7 @@ import { icons } from "@/app/components/icons";
 import { Button } from "@/app/components/ui/button";
 import { TooltipTrigger, TooltipContent, Tooltip, TooltipProvider } from "@/app/components/ui/tooltip";
 import { View, useView } from '@/app/contexts/view';
+import ModeToggle from "@/app/components/mode-toggle";
 
 export default function ActivityBar() {
   const { Settings2Icon, HomeIcon, EyeOffIcon } = icons;
@@ -26,6 +27,7 @@ export default function ActivityBar() {
           width={0}
           height={0}
           unoptimized
+          priority
         />
       </div>
       <nav className="grid gap-1 p-2">
@@ -63,6 +65,7 @@ export default function ActivityBar() {
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
+        <ModeToggle />
       </nav>
       <nav className="mt-auto grid gap-1 p-2">
         <TooltipProvider>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { Id, toast } from 'react-toastify';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -8,7 +8,7 @@ import * as yup from 'yup';
 
 import { toastify } from '@/app/constants';
 import { SettingsForm } from '@/app/types/form';
-import useFormStore from '@/app/stores/form-store';
+import useSettingsStore from '@/app/stores/settings';
 import { Button } from "@/app/components/ui/button";
 import { Label } from "@/app/components/ui/label";
 import { Input } from "@/app/components/ui/input";
@@ -24,7 +24,7 @@ const schema = yup
 
 export default function Settings() {
   const [clickable, setClickable] = useState(true);
-  const { downloadLocation, setDownloadLocation } = useFormStore();
+  const { downloadLocation, setDownloadLocation } = useSettingsStore();
   const toastId = useRef<unknown>(null);
 
   const form = useForm<SettingsForm>({
@@ -33,7 +33,6 @@ export default function Settings() {
   const {
     register,
     handleSubmit,
-    setValue,
   } = form;
 
   const onSubmit: SubmitHandler<SettingsForm> = async (data: SettingsForm) => {
@@ -50,10 +49,6 @@ export default function Settings() {
       console.error('Error: ', error);
     }
   };
-
-  useEffect(() => {
-    setValue('save_to', downloadLocation);
-  }, [downloadLocation, setValue]);
 
   return (
     <>
