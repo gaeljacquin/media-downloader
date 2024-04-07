@@ -1,5 +1,5 @@
 type HomeFormOptions = {
-  audioOnly?: boolean
+  audioOnly: boolean
   saveTo?: string
 }
 

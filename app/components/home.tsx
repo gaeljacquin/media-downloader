@@ -2,7 +2,7 @@
 
 import { Command } from '@tauri-apps/api/shell';
 import dynamic from 'next/dynamic';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Id, toast } from 'react-toastify';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -14,8 +14,15 @@ import { HomeForm } from '@/app/types/form';
 import { Button } from "@/app/components/ui/button";
 import { Checkbox } from "@/app/components/ui/checkbox";
 import { Input } from "@/app/components/ui/input";
-import { Form, FormControl, FormField, FormItem, FormLabel } from "@/app/components/ui/form";
-import useSettingsStore from '../stores/settings';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel
+} from "@/app/components/ui/form";
+import useSettingsStore from '@/app/stores/settings';
+import useHomeStore from '@/app/stores/home';
 
 const DynamicTerminal = dynamic(() => import('@/app/components/terminal-display'), {
   ssr: false,
@@ -25,24 +32,24 @@ const schema = yup
   .object()
   .shape({
     url: yup.string().url('Please enter a valid URL').required('URL required'),
-    audioOnly: yup.boolean().optional(),
+    audioOnly: yup.boolean().required(),
     saveTo: yup.string().optional(),
   })
   .required();
 
 export default function Home() {
-  const [clickable, setClickable] = useState(true);
   const toastId = useRef<unknown>(null);
   const { downloadLocation } = useSettingsStore();
+  const { formData, setFormData, clickable, setClickable } = useHomeStore();
   const form = useForm<HomeForm>({
     resolver: yupResolver(schema),
-    defaultValues: {
-      audioOnly: false,
-    },
+    defaultValues: formData,
   });
   const {
     register,
+    watch,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = form;
 
@@ -66,6 +73,17 @@ export default function Home() {
       console.error('Error: ', error);
     }
   };
+
+  useEffect(() => {
+    const subscription = watch((value) =>
+      setFormData(value as HomeForm)
+    )
+    return () => subscription.unsubscribe()
+  }, [setFormData, watch]);
+
+  useEffect(() => {
+    setValue('saveTo', downloadLocation);
+  }, [setValue, downloadLocation]);
 
   return (
     <>
@@ -115,9 +133,7 @@ export default function Home() {
             </fieldset>
             <Input
               id="saveTo"
-              {...register('saveTo', {
-                value: downloadLocation,
-              })}
+              {...register('saveTo')}
               type="hidden"
             />
             <Button
