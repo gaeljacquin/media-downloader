@@ -1,6 +1,7 @@
 'use client';
 
 import { Command } from '@tauri-apps/api/shell';
+import dynamic from 'next/dynamic';
 import { useRef, useState } from 'react';
 import { Id, toast } from 'react-toastify';
 import { useForm, type SubmitHandler } from 'react-hook-form';
@@ -9,29 +10,34 @@ import * as yup from 'yup';
 
 import { toastify } from '@/app/constants';
 import { ytdlp } from '@/app/functions';
-import { MainForm } from '@/app/types/form';
+import { HomeForm } from '@/app/types/form';
 import { Button } from "@/app/components/ui/button";
 import { Checkbox } from "@/app/components/ui/checkbox";
 import { Input } from "@/app/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/app/components/ui/form";
-import Placeholder from '@/app/components/placeholder';
+import useSettingsStore from '../stores/settings';
+
+const DynamicTerminal = dynamic(() => import('@/app/components/terminal-display'), {
+  ssr: false,
+});
 
 const schema = yup
   .object()
   .shape({
     url: yup.string().url('Please enter a valid URL').required('URL required'),
-    audio_only: yup.boolean().optional(),
+    audioOnly: yup.boolean().optional(),
+    saveTo: yup.string().optional(),
   })
   .required();
 
 export default function Home() {
   const [clickable, setClickable] = useState(true);
   const toastId = useRef<unknown>(null);
-
-  const form = useForm<MainForm>({
+  const { downloadLocation } = useSettingsStore();
+  const form = useForm<HomeForm>({
     resolver: yupResolver(schema),
     defaultValues: {
-      audio_only: true,
+      audioOnly: false,
     },
   });
   const {
@@ -40,7 +46,7 @@ export default function Home() {
     formState: { errors },
   } = form;
 
-  const onSubmit: SubmitHandler<MainForm> = async (data: MainForm) => {
+  const onSubmit: SubmitHandler<HomeForm> = async (data: HomeForm) => {
     setClickable(false);
     toastId.current = toast.info('Starting download...', toastify.optionSet2);
 
@@ -53,7 +59,6 @@ export default function Home() {
         toast.success('Download complete', toastify.optionSet1);
         setClickable(true);
       });
-
     } catch (error) {
       toast.dismiss(toastId.current as Id);
       toast.error('Something went wrong', toastify.optionSet1);
@@ -88,15 +93,15 @@ export default function Home() {
             <fieldset className="grid gap-8 rounded-lg border p-4">
               <legend className="-ml-1 px-1 text-sm font-medium">Options</legend>
               <FormField
-                name="audio_only"
+                name="audioOnly"
                 render={({ field }) => (
                   <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
                     <FormControl>
                       <Checkbox
                         checked={field.value}
                         onCheckedChange={field.onChange}
-                        id="audio_only"
-                        {...register('audio_only')}
+                        id="audioOnly"
+                        {...register('audioOnly')}
                       />
                     </FormControl>
                     <div className="space-y-1 leading-none">
@@ -108,6 +113,13 @@ export default function Home() {
                 )}
               />
             </fieldset>
+            <Input
+              id="saveTo"
+              {...register('saveTo', {
+                value: downloadLocation,
+              })}
+              type="hidden"
+            />
             <Button
               className={`mt-5 ${!clickable && "bg-gray-600 hover:cursor-not-allowed"}`}
               type="submit"
@@ -117,7 +129,7 @@ export default function Home() {
           </form>
         </Form>
       </div>
-      <Placeholder />
+      <DynamicTerminal />
     </>
   )
 }

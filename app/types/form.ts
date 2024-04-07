@@ -1,8 +1,11 @@
-export type MainForm = {
-  url: string
-  audio_only?: boolean
+type HomeFormOptions = {
+  audioOnly?: boolean
+  saveTo?: string
 }
 
+export type HomeForm = { url: string } & HomeFormOptions;
+
 export type SettingsForm = {
-  save_to?: string
+  saveTo?: string
+  terminalFontSize: number
 }

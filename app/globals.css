@@ -57,3 +57,13 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  .xterm .xterm-viewport {
+    overflow-y: hidden;
+  }
+
+  .xterm .xterm-viewport::-webkit-scrollbar {
+    display: none;
+  }
+}

@@ -7,7 +7,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
 import { toastify } from '@/app/constants';
-import { SettingsForm } from '@/app/types/form';
+import { type SettingsForm } from '@/app/types/form';
 import useSettingsStore from '@/app/stores/settings';
 import { Button } from "@/app/components/ui/button";
 import { Label } from "@/app/components/ui/label";
@@ -18,14 +18,20 @@ import Placeholder from '@/app/components/placeholder';
 const schema = yup
   .object()
   .shape({
-    save_to: yup.string().optional(),
+    saveTo: yup.string().optional(),
+    terminalFontSize: yup.number().required(),
   })
   .required();
 
 export default function Settings() {
   const [clickable, setClickable] = useState(true);
-  const { downloadLocation, setDownloadLocation } = useSettingsStore();
   const toastId = useRef<unknown>(null);
+  const {
+    downloadLocation,
+    setDownloadLocation,
+    terminalFontSize,
+    setTerminalFontSize,
+  } = useSettingsStore();
 
   const form = useForm<SettingsForm>({
     resolver: yupResolver(schema),
@@ -39,7 +45,8 @@ export default function Settings() {
     setClickable(false);
 
     try {
-      setDownloadLocation(data.save_to ?? '');
+      setDownloadLocation(data.saveTo ?? '');
+      setTerminalFontSize(data.terminalFontSize);
       toast.success('Settings saved', toastify.optionSet2);
       setClickable(true);
     } catch (error) {
@@ -61,16 +68,27 @@ export default function Settings() {
             <fieldset className="grid gap-8 rounded-lg border p-4">
               <legend className="-ml-1 px-1 text-sm font-medium">Settings</legend>
               <div className="grid gap-3">
-                <Label htmlFor="save_to">Save to</Label>
+                <Label htmlFor="saveTo">Save to</Label>
                 <Input
-                  id="save_to"
+                  id="saveTo"
                   className="form-text-input"
-                  {...register('save_to', {
+                  {...register('saveTo', {
                     value: downloadLocation,
                   })}
                   type="text"
-                  placeholder="Optional, defaults to install location"
+                  placeholder="Defaults to binary path"
                   autoComplete="off"
+                />
+              </div>
+              <div className="grid gap-3">
+                <Label htmlFor="terminalFontSize">Terminal Font Size</Label>
+                <Input
+                  id="terminalFontSize"
+                  {...register('terminalFontSize', {
+                    value: terminalFontSize,
+                  })}
+                  placeholder={terminalFontSize.toString()}
+                  type="number"
                 />
               </div>
             </fieldset>

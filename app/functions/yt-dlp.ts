@@ -1,15 +1,15 @@
-import { MainForm } from "@/app/types/form";
+import { HomeForm } from "@/app/types/form";
 
-export function addOptions(data: MainForm) {
+export function addOptions(data: HomeForm) {
   let res = [];
 
-  if (data.audio_only) {
+  if (data.audioOnly) {
     res.push('-x');
   }
 
-  if (data.save_to) {
+  if (data.saveTo) {
     res.push('-P');
-    res.push(data.save_to);
+    res.push(data.saveTo);
   }
 
   res.push(data.url);
