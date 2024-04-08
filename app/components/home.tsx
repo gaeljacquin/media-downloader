@@ -2,13 +2,11 @@
 
 import { Command } from '@tauri-apps/api/shell';
 import dynamic from 'next/dynamic';
-import { useEffect, useRef, useState } from 'react';
-import { Id, toast } from 'react-toastify';
+import { useEffect } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
-import { toastify } from '@/app/constants';
 import { ytdlp } from '@/app/functions';
 import { HomeForm } from '@/app/types/form';
 import { Button } from "@/app/components/ui/button";
@@ -23,6 +21,7 @@ import {
 } from "@/app/components/ui/form";
 import useSettingsStore from '@/app/stores/settings';
 import useHomeStore from '@/app/stores/home';
+import { useTerminalOutput } from '@/app/contexts/terminal-output';
 
 const DynamicTerminal = dynamic(() => import('@/app/components/terminal-display'), {
   ssr: false,
@@ -38,9 +37,9 @@ const schema = yup
   .required();
 
 export default function Home() {
-  const toastId = useRef<unknown>(null);
   const { downloadLocation } = useSettingsStore();
   const { formData, setFormData, clickable, setClickable } = useHomeStore();
+  const { setOutput } = useTerminalOutput();
   const form = useForm<HomeForm>({
     resolver: yupResolver(schema),
     defaultValues: formData,
@@ -55,20 +54,29 @@ export default function Home() {
 
   const onSubmit: SubmitHandler<HomeForm> = async (data: HomeForm) => {
     setClickable(false);
-    toastId.current = toast.info('Starting download...', toastify.optionSet2);
+    setOutput('Starting download...\r\n');
 
     try {
       const params = ytdlp.addOptions(data);
       const command = Command.sidecar('binaries/yt-dlp', params);
 
-      await command.execute().then(() => {
-        toast.dismiss(toastId.current as Id);
-        toast.success('Download complete', toastify.optionSet1);
+      command.stdout.on('data', (line) => {
+        console.log(`Stdout: ${line}`);
+        setOutput(`\r\n${line}`);
+      });
+
+      command.stderr.on('data', (line) => {
+        console.log(`Stderr: ${line}`);
+        setOutput(`\r\n${line}`);
+      });
+
+      await command.execute().then(() =>{
+        setOutput(`\r\n${downloadLocation ?  downloadLocation + ' ' : ''}$ `);
         setClickable(true);
       });
     } catch (error) {
-      toast.dismiss(toastId.current as Id);
-      toast.error('Something went wrong', toastify.optionSet1);
+      setOutput(`\r\n${error}`);
+      setOutput(`\r\n${downloadLocation ?  downloadLocation + ' ' : ''}$ `);
       setClickable(true);
       console.error('Error: ', error);
     }

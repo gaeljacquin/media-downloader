@@ -5,12 +5,14 @@ import { Terminal } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
 
 import useSettingsStore from '@/app/stores/settings';
+import { useTerminalOutput } from '@/app/contexts/terminal-output';
 
 export default function TerminalDisplay() {
   const terminalRef = useRef<HTMLDivElement>(null);
   const terminalInstance = useRef<Terminal | null>(null);
   const terminalInitRef = useRef(false);
   const { terminalFontSize, downloadLocation } = useSettingsStore();
+  const { output } = useTerminalOutput();
 
   useEffect(() => {
     if (terminalRef.current && !Boolean(terminalInitRef.current)) {
@@ -46,6 +48,12 @@ export default function TerminalDisplay() {
       }
     }
   }, []);
+
+  useEffect(() => {
+    if (terminalInstance.current && output) {
+      terminalInstance.current.write(output);
+    }
+  }, [output]);
 
   return (
     <div className="relative flex h-full flex-col rounded-xl bg-black p-4 lg:col-span-2">
