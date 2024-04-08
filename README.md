@@ -12,33 +12,33 @@
 </h3>
 
 ## Features
-- Portable; installers also available
 - Free and open source
+- Dark mode
+- Console output
 - Hide in system tray
-- Custom and persistent save location
-- 'Audio only' option
+- Modern UI
 - *__And more to come...__*
 
 ## Screenshots
 ![](/screenshots/win11_1.png)
+
 ![](/screenshots/win11_2.png)
+
 ![](/screenshots/win11_3.png)
 
-## Requirements
+## Usage
+### Install
+Head over to the [releases](https://github.com/gaeljacquin/yt-dlp-gui/releases).
+
+### Compile
+#### Requirements
 * [yt-dlp](https://github.com/yt-dlp/yt-dlp/)
 * [Webview2](https://developer.microsoft.com/en-us/microsoft-edge/webview2) (Windows only, if it's not already installed)
 * [FFmpeg](https://ffmpeg.org/download.html) (optional)
 
-## Usage
-### Install
-Get the binaries [here](https://github.com/gaeljacquin/yt-dlp-gui/releases).
-
-The [yt-dlp binary](https://github.com/yt-dlp/yt-dlp/releases) is bundled with the installers, and not the portable Windows version. If using the latter, place both binaries in the same directory.
-
-### Compile
 Run `pnpm tauri build --target $PLATFORM`.
 
 Add the [yt-dlp binary](https://github.com/yt-dlp/yt-dlp/releases) to `src/tauri/binaries` and rename it according to platform.
 
-### Important notes
+### Important Notes
 **Builds and installers were only tested on Windows 11.**

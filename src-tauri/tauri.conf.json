@@ -68,10 +68,8 @@
     },
     "windows": [
       {
-        "width": 1200,
-        "height": 720,
-        "fullscreen": false,
-        "resizable": false,
+        "width": 1920,
+        "height": 1080,
         "fileDropEnabled": false,
         "titleBarStyle": "Transparent",
         "title": "yt-dlp GUI"
