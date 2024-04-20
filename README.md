@@ -1,4 +1,4 @@
-<h1 style="text-align: center;">
+<h1 align="center">
   <img src="src-tauri/icons/128x128.png" width="128" alt="yt-dlp logo" />
   <br>
   yt-dlp GUI
@@ -7,7 +7,7 @@
   [![publish](https://github.com/gaeljacquin/yt-dlp-gui/actions/workflows/publish.yml/badge.svg)](https://github.com/gaeljacquin/yt-dlp-gui/actions/workflows/publish.yml)
 </h1>
 
-<h3 style="text-align: center;">
+<h3 align="center">
   A cross-platform GUI client for <a href="https://github.com/yt-dlp/yt-dlp/">yt-dlp</a> built with <a href="https://tauri.app/">Tauri</a>.
 </h3>
 
