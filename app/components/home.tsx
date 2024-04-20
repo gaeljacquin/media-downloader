@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import { useEffect } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { isPermissionGranted, requestPermission, sendNotification } from '@tauri-apps/api/notification';
 import * as yup from 'yup';
 
 import { ytdlp } from '@/app/functions';
@@ -70,10 +71,28 @@ export default function Home() {
         setOutput(`\r\n${line}`);
       });
 
-      await command.execute().then(() =>{
-        setOutput(`\r\n${downloadLocation ?  downloadLocation + ' ' : ''}$ `);
-        setClickable(true);
-      });
+      let notificationBody = '';
+      const output = await command.execute();
+
+      if (output.code === 0) {
+        notificationBody = 'Download complete';
+      } else {
+        notificationBody = 'Download failed';
+      }
+
+      setOutput(`\r\n${downloadLocation ?  downloadLocation + ' ' : ''}$ `);
+      setClickable(true);
+
+      let permissionGranted = await isPermissionGranted();
+
+      if (!permissionGranted) {
+        const permission = await requestPermission();
+        permissionGranted = permission === 'granted';
+      }
+
+      if (permissionGranted) {
+        sendNotification({ title: 'yt-dlp GUI', body: notificationBody  });
+      }
     } catch (error) {
       setOutput(`\r\n${error}`);
       setOutput(`\r\n${downloadLocation ?  downloadLocation + ' ' : ''}$ `);

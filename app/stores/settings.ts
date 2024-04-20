@@ -6,13 +6,12 @@ interface SettingsStore {
   setDownloadLocation: (arg0: string) => void
   terminalFontSize: number
   setTerminalFontSize: (arg0: number) => void
+  resetSettings: () => void
 }
 
 export const defaultSettings = {
   downloadLocation: '',
-  setDownloadLocation: () => null,
   terminalFontSize: 16,
-  setTerminalFontSize: () => null,
 }
 
 const useSettingsStore = create<SettingsStore>()(
@@ -25,6 +24,9 @@ const useSettingsStore = create<SettingsStore>()(
         },
         setTerminalFontSize: (newSize: number) => {
           set({ terminalFontSize: newSize })
+        },
+        resetSettings: () => {
+          set({ ...defaultSettings })
         },
       }),
     ), {

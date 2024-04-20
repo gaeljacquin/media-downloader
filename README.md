@@ -1,5 +1,5 @@
-<h1 align="center">
-  <img src="src-tauri/icons/128x128.png" width="128" />
+<h1 style="text-align: center;">
+  <img src="src-tauri/icons/128x128.png" width="128" alt="yt-dlp logo" />
   <br>
   yt-dlp GUI
   <br>
@@ -7,7 +7,7 @@
   [![publish](https://github.com/gaeljacquin/yt-dlp-gui/actions/workflows/publish.yml/badge.svg)](https://github.com/gaeljacquin/yt-dlp-gui/actions/workflows/publish.yml)
 </h1>
 
-<h3 align="center">
+<h3 style="text-align: center;">
   A cross-platform GUI client for <a href="https://github.com/yt-dlp/yt-dlp/">yt-dlp</a> built with <a href="https://tauri.app/">Tauri</a>.
 </h3>
 
@@ -35,11 +35,11 @@ Head over to [Releases](https://github.com/gaeljacquin/yt-dlp-gui/releases).
 * [Webview2](https://developer.microsoft.com/en-us/microsoft-edge/webview2) (Windows only, if it's not already installed)
 * [FFmpeg](https://ffmpeg.org/download.html) (optional)
 
-#### Steps (Windows) ####
+#### Steps
 1. Clone the repository.
 2. Add the [yt-dlp binary](https://github.com/yt-dlp/yt-dlp/releases) to `src/tauri/binaries`.
-3. Rename `yt-dlp` as `yt-dlp-x86_64-pc-windows-msvc`.
-4. Run `pnpm tauri build --target x86_64-pc-windows-msvc`.
+3. Rename `yt-dlp` to `yt-dlp-$TARGET`, replacing `$TARGET` with the corresponding platform e.g. `x86_64-pc-windows-msvc` for Windows.
+4. Run `pnpm tauri build --target $TARGET`.
 
 ## Important Notes
 **Builds and installers were (so far) only tested on Windows 11.**
