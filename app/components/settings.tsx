@@ -8,12 +8,17 @@ import * as yup from 'yup';
 
 import { toastify } from '@/app/constants';
 import { type SettingsForm } from '@/app/types/form';
-import useSettingsStore from '@/app/stores/settings';
+import useSettingsStore, { defaultSettings } from '@/app/stores/settings';
 import { Button } from "@/app/components/ui/button";
 import { Label } from "@/app/components/ui/label";
 import { Input } from "@/app/components/ui/input";
 import { Form } from "@/app/components/ui/form";
 import Placeholder from '@/app/components/placeholder';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/app/components/ui/popover"
 
 const schema = yup
   .object()
@@ -31,6 +36,7 @@ export default function Settings() {
     setDownloadLocation,
     terminalFontSize,
     setTerminalFontSize,
+    resetSettings,
   } = useSettingsStore();
 
   const form = useForm<SettingsForm>({
@@ -39,7 +45,20 @@ export default function Settings() {
   const {
     register,
     handleSubmit,
+    reset,
   } = form;
+
+  const handleEscapePress = () => {
+    const event = new KeyboardEvent('keydown', {
+      key: 'Escape',
+      code: 'Escape',
+      keyCode: 27,
+      bubbles: true,
+      cancelable: false,
+    });
+
+    document.dispatchEvent(event);
+  };
 
   const onSubmit: SubmitHandler<SettingsForm> = async (data: SettingsForm) => {
     setClickable(false);
@@ -56,6 +75,19 @@ export default function Settings() {
       console.error('Error: ', error);
     }
   };
+
+  const onReset = () => {
+    try {
+      resetSettings();
+      reset(defaultSettings);
+      handleEscapePress();
+      toast.success('Settings restored to their original defaults', toastify.optionSet2);
+    } catch (error) {
+      toast.dismiss(toastId.current as Id);
+      toast.error('Something went wrong', toastify.optionSet1);
+      console.error('Error: ', error);
+    }
+  }
 
   return (
     <>
@@ -76,7 +108,7 @@ export default function Settings() {
                     value: downloadLocation,
                   })}
                   type="text"
-                  placeholder="Defaults to binary path"
+                  placeholder="Defaults to install location"
                   autoComplete="off"
                 />
               </div>
@@ -98,6 +130,28 @@ export default function Settings() {
             >
               Save
             </Button>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline">
+                  Reset settings
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent>
+                <div className="grid gap-4">
+                  <div className="space-y-2">
+                    <h4 className="font-medium leading-none">Confirm</h4>
+                    <p className="text-sm text-muted-foreground">This action cannot be undone!</p>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => onReset()}
+                  >
+                    I understand
+                  </Button>
+                </div>
+              </PopoverContent>
+            </Popover>
           </form>
         </Form>
       </div>
