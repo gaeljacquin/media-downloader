@@ -65,7 +65,7 @@ export default function Home() {
     }
 
     if (permissionGranted) {
-      sendNotification({ title: 'yt-dlp GUI', body: notificationBody  });
+      sendNotification({ title: 'Media Downloader', body: notificationBody  });
     }
   }
 

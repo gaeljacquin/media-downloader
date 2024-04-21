@@ -28,7 +28,7 @@ export default function TerminalDisplay() {
       terminalInstance.current.loadAddon(fitAddon);
       terminalInstance.current.open(terminalRef.current);
       fitAddon.fit();
-      terminalInstance.current.write('Thank you for using \x1b[31myt-dlp GUI\x1b[0m!\r\n');
+      terminalInstance.current.write('Thank you for using \x1b[31mMedia Downloader\x1b[0m!\r\n');
       terminalInstance.current.write('\r\n');
       terminalInstance.current.write(`${downloadLocation ?  downloadLocation + ' ' : ''}$ `);
       terminalInitRef.current = true;

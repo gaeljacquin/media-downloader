@@ -1,17 +1,18 @@
 <h1 align="center">
-  <img src="src-tauri/icons/128x128.png" width="128" alt="yt-dlp logo" />
+  <img src="src-tauri/icons/128x128.png" width="128" alt="Media Downloader logo" />
   <br>
-  yt-dlp GUI
+  Media Downloader
   <br>
 
-  [![publish](https://github.com/gaeljacquin/yt-dlp-gui/actions/workflows/publish.yml/badge.svg)](https://github.com/gaeljacquin/yt-dlp-gui/actions/workflows/publish.yml)
+  [![publish](https://github.com/gaeljacquin/media-downloader/actions/workflows/publish.yml/badge.svg)](https://github.com/gaeljacquin/media-downloader/actions/workflows/publish.yml)
 </h1>
 
 <h3 align="center">
-  A cross-platform GUI client for <a href="https://github.com/yt-dlp/yt-dlp/">yt-dlp</a> built with <a href="https://tauri.app/">Tauri</a>.
+  Save audio & video locally through a GUI wrapper for <a href="https://github.com/yt-dlp/yt-dlp/">yt-dlp</a>
 </h3>
 
 ## Features
+- Cross platform
 - Modern UI
 - Dark mode
 - Console output
@@ -19,6 +20,7 @@
 - *__And more to come...__*
 
 ## Screenshots
+[comment]: <> (Update before merging)
 ![](/screenshots/win11_1.png)
 
 ![](/screenshots/win11_2.png)
@@ -27,7 +29,7 @@
 
 ## Instructions
 ### Install
-Head over to [Releases](https://github.com/gaeljacquin/yt-dlp-gui/releases).
+Head over to [Releases](https://github.com/gaeljacquin/media-downloader/releases).
 
 ### Build
 #### Prerequisites

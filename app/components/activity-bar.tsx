@@ -21,7 +21,7 @@ export default function ActivityBar() {
       <div className="border-b border-transparent p-2">
         <Image
           src="/images/favicon.ico"
-          alt="yt-dlp icon"
+          alt="Media Downloader icon"
           className="w-10 h-auto"
           width={0}
           height={0}
