@@ -163,12 +163,16 @@ export default function Home() {
               {...register('saveTo')}
               type="hidden"
             />
-            <Button
-              className={`mt-5 ${!clickable && "bg-gray-600 hover:cursor-not-allowed"}`}
-              type="submit"
-            >
-              Download
-            </Button>
+            {clickable ?
+              <Button
+                className="mt-5"
+                type="submit"
+              >
+                Download
+              </Button>
+            :
+              <div className="sk-center sk-plane"></div>
+            }
           </form>
         </Form>
       </div>

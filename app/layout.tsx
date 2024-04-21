@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import 'react-toastify/dist/ReactToastify.css';
 import '@xterm/xterm/css/xterm.css';
+import 'spinkit/spinkit.min.css';
 
 import DisableContextMenu from '@/app/components/disable-context-menu';
 import { ThemeProvider } from "@/app/components/theme-provider";
