@@ -1,7 +1,6 @@
 'use client';
 
 import { Command } from '@tauri-apps/api/shell';
-import dynamic from 'next/dynamic';
 import { useEffect } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -24,10 +23,6 @@ import useSettingsStore from '@/app/stores/settings';
 import useHomeStore from '@/app/stores/home';
 import { useTerminalOutput } from '@/app/contexts/terminal-output';
 
-const DynamicTerminal = dynamic(() => import('@/app/components/terminal-display'), {
-  ssr: false,
-});
-
 const schema = yup
   .object()
   .shape({
@@ -38,7 +33,7 @@ const schema = yup
   .required();
 
 export default function Home() {
-  const { downloadLocation } = useSettingsStore();
+  const { downloadLocation, notifications } = useSettingsStore();
   const { formData, setFormData, clickable, setClickable } = useHomeStore();
   const { setOutput } = useTerminalOutput();
   const form = useForm<HomeForm>({
@@ -52,6 +47,27 @@ export default function Home() {
     setValue,
     formState: { errors },
   } = form;
+
+  const notify = async (outputCode: number | null) => {
+    let notificationBody = '';
+
+    if (outputCode === 0) {
+      notificationBody = 'Download complete';
+    } else {
+      notificationBody = 'Download failed';
+    }
+
+    let permissionGranted = await isPermissionGranted();
+
+    if (!permissionGranted) {
+      const permission = await requestPermission();
+      permissionGranted = permission === 'granted';
+    }
+
+    if (permissionGranted) {
+      sendNotification({ title: 'yt-dlp GUI', body: notificationBody  });
+    }
+  }
 
   const onSubmit: SubmitHandler<HomeForm> = async (data: HomeForm) => {
     setClickable(false);
@@ -71,28 +87,12 @@ export default function Home() {
         setOutput(`\r\n${line}`);
       });
 
-      let notificationBody = '';
       const output = await command.execute();
 
-      if (output.code === 0) {
-        notificationBody = 'Download complete';
-      } else {
-        notificationBody = 'Download failed';
-      }
+      notifications && notify(output.code);
 
       setOutput(`\r\n${downloadLocation ?  downloadLocation + ' ' : ''}$ `);
       setClickable(true);
-
-      let permissionGranted = await isPermissionGranted();
-
-      if (!permissionGranted) {
-        const permission = await requestPermission();
-        permissionGranted = permission === 'granted';
-      }
-
-      if (permissionGranted) {
-        sendNotification({ title: 'yt-dlp GUI', body: notificationBody  });
-      }
     } catch (error) {
       setOutput(`\r\n${error}`);
       setOutput(`\r\n${downloadLocation ?  downloadLocation + ' ' : ''}$ `);
@@ -163,16 +163,19 @@ export default function Home() {
               {...register('saveTo')}
               type="hidden"
             />
-            <Button
-              className={`mt-5 ${!clickable && "bg-gray-600 hover:cursor-not-allowed"}`}
-              type="submit"
-            >
-              Download
-            </Button>
+            {clickable ?
+              <Button
+                className="mt-5"
+                type="submit"
+              >
+                Download
+              </Button>
+            :
+              <div className="sk-center sk-plane"></div>
+            }
           </form>
         </Form>
       </div>
-      <DynamicTerminal />
     </>
   )
 }

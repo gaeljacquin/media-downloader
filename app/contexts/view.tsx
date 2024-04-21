@@ -2,7 +2,8 @@ import { ReactElement, createContext, useContext, useState } from 'react';
 
 export enum View {
   Home,
-  Settings
+  Logs,
+  Settings,
 }
 
 interface ViewContextProps {

@@ -12,8 +12,14 @@ import useSettingsStore, { defaultSettings } from '@/app/stores/settings';
 import { Button } from "@/app/components/ui/button";
 import { Label } from "@/app/components/ui/label";
 import { Input } from "@/app/components/ui/input";
-import { Form } from "@/app/components/ui/form";
-import Placeholder from '@/app/components/placeholder';
+import { Checkbox } from "@/app/components/ui/checkbox";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel
+} from "@/app/components/ui/form";
 import {
   Popover,
   PopoverContent,
@@ -25,6 +31,7 @@ const schema = yup
   .shape({
     saveTo: yup.string().optional(),
     terminalFontSize: yup.number().required(),
+    notifications: yup.boolean().required(),
   })
   .required();
 
@@ -36,11 +43,16 @@ export default function Settings() {
     setDownloadLocation,
     terminalFontSize,
     setTerminalFontSize,
+    notifications,
+    setNotifications,
     resetSettings,
   } = useSettingsStore();
 
   const form = useForm<SettingsForm>({
     resolver: yupResolver(schema),
+    defaultValues: {
+      notifications: notifications,
+    },
   });
   const {
     register,
@@ -66,6 +78,7 @@ export default function Settings() {
     try {
       setDownloadLocation(data.saveTo ?? '');
       setTerminalFontSize(data.terminalFontSize);
+      setNotifications(data.notifications);
       toast.success('Settings saved', toastify.optionSet2);
       setClickable(true);
     } catch (error) {
@@ -108,7 +121,7 @@ export default function Settings() {
                     value: downloadLocation,
                   })}
                   type="text"
-                  placeholder="Defaults to install location"
+                  placeholder={`Defaults to ${defaultSettings.downloadLocation}`}
                   autoComplete="off"
                 />
               </div>
@@ -121,6 +134,28 @@ export default function Settings() {
                   })}
                   placeholder={terminalFontSize.toString()}
                   type="number"
+                />
+              </div>
+              <div className="grid gap-3">
+                <FormField
+                  name="notifications"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 ml-1 mb-2">
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                          id="notifications"
+                          {...register('notifications')}
+                        />
+                      </FormControl>
+                      <div className="space-y-1 leading-none">
+                        <FormLabel>
+                          Enable system notifications (Does not affect in-app notifications)
+                        </FormLabel>
+                      </div>
+                    </FormItem>
+                  )}
                 />
               </div>
             </fieldset>
@@ -155,7 +190,6 @@ export default function Settings() {
           </form>
         </Form>
       </div>
-      <Placeholder />
     </>
   )
 }
