@@ -1,7 +1,6 @@
 'use client';
 
 import { Command } from '@tauri-apps/api/shell';
-import dynamic from 'next/dynamic';
 import { useEffect } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -23,10 +22,7 @@ import {
 import useSettingsStore from '@/app/stores/settings';
 import useHomeStore from '@/app/stores/home';
 import { useTerminalOutput } from '@/app/contexts/terminal-output';
-
-const DynamicTerminal = dynamic(() => import('@/app/components/terminal-display'), {
-  ssr: false,
-});
+import Placeholder from '@/app/components/placeholder';
 
 const schema = yup
   .object()
@@ -172,7 +168,7 @@ export default function Home() {
           </form>
         </Form>
       </div>
-      <DynamicTerminal />
+      <Placeholder />
     </>
   )
 }

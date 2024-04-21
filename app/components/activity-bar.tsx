@@ -9,7 +9,7 @@ import { View, useView } from '@/app/contexts/view';
 import ModeToggle from "@/app/components/mode-toggle";
 
 export default function ActivityBar() {
-  const { Settings2Icon, HomeIcon, EyeOffIcon } = icons;
+  const { Settings2Icon, HomeIcon, EyeOffIcon, TerminalSquareIcon } = icons;
   const { view, switchView } = useView();
 
   const invokeHideSystemTray = async () => {
@@ -46,6 +46,22 @@ export default function ActivityBar() {
             </TooltipTrigger>
             <TooltipContent side="right" sideOffset={5}>
               Home
+            </TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                aria-label="Logs"
+                className={`rounded-lg ${view === View.Logs && 'bg-muted'}`}
+                size="icon"
+                variant="ghost"
+                onClick={() => view !== View.Logs ? switchView(View.Logs) : null}
+              >
+                <TerminalSquareIcon className="size-5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="right" sideOffset={5}>
+              Logs
             </TooltipContent>
           </Tooltip>
           <Tooltip>
