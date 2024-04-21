@@ -65,6 +65,9 @@ dependencies:
   react-toastify:
     specifier: ^10.0.5
     version: 10.0.5(react-dom@18.2.0)(react@18.2.0)
+  spinkit:
+    specifier: ^2.0.1
+    version: 2.0.1
   tailwind-merge:
     specifier: ^2.2.2
     version: 2.3.0
@@ -3471,6 +3474,10 @@ packages:
   /source-map-js@1.2.0:
     resolution: {integrity: sha512-itJW8lvSA0TXEphiRoawsCksnlf8SyvmFzIhltqAHluXd88pkCd+cXJVHTDwdCr0IzwptSm035IHQktUu1QUMg==}
     engines: {node: '>=0.10.0'}
+
+  /spinkit@2.0.1:
+    resolution: {integrity: sha512-oYBGY0GV1H1dX+ZdKnB6JVsYC1w/Xl20H111eb+WSS8nUYmlHgGb4y5buFSkzzceEeYYh5kMhXoAmoTpiQauiA==}
+    dev: false
 
   /streamsearch@1.1.0:
     resolution: {integrity: sha512-Mcc5wHehp9aXz1ax6bZUyY5afg9u2rv5cqQI3mRrYkGC8rW2hM02jWuwjtL++LS5qinSyhj2QfLyNsuc+VsExg==}

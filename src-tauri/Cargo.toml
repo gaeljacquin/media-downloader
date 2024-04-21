@@ -1,6 +1,6 @@
 [package]
 name = "app"
-version = "0.3.0"
+version = "0.4.0"
 description = "A cross platform GUI for yt-dlp built with Tauri"
 authors = ["Gaël Jacquin"]
 license = ""

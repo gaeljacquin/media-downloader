@@ -6,10 +6,9 @@ import { icons } from "@/app/components/icons";
 import { Button } from "@/app/components/ui/button";
 import { TooltipTrigger, TooltipContent, Tooltip, TooltipProvider } from "@/app/components/ui/tooltip";
 import { View, useView } from '@/app/contexts/view';
-import ModeToggle from "@/app/components/mode-toggle";
 
 export default function ActivityBar() {
-  const { Settings2Icon, HomeIcon, EyeOffIcon } = icons;
+  const { Settings2Icon, HomeIcon, EyeOffIcon, TerminalSquareIcon } = icons;
   const { view, switchView } = useView();
 
   const invokeHideSystemTray = async () => {
@@ -51,6 +50,22 @@ export default function ActivityBar() {
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
+                aria-label="Logs"
+                className={`rounded-lg ${view === View.Logs && 'bg-muted'}`}
+                size="icon"
+                variant="ghost"
+                onClick={() => view !== View.Logs ? switchView(View.Logs) : null}
+              >
+                <TerminalSquareIcon className="size-5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="right" sideOffset={5}>
+              Logs
+            </TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
                 aria-label="Settings"
                 className={`rounded-lg ${view === View.Settings && 'bg-muted'}`}
                 size="icon"
@@ -65,7 +80,6 @@ export default function ActivityBar() {
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
-        <ModeToggle />
       </nav>
       <nav className="mt-auto grid gap-1 p-2">
         <TooltipProvider>
