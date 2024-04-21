@@ -20,7 +20,6 @@ import {
   FormItem,
   FormLabel
 } from "@/app/components/ui/form";
-import Placeholder from '@/app/components/placeholder';
 import {
   Popover,
   PopoverContent,
@@ -191,7 +190,6 @@ export default function Settings() {
           </form>
         </Form>
       </div>
-      <Placeholder />
     </>
   )
 }

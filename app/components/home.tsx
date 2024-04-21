@@ -22,7 +22,6 @@ import {
 import useSettingsStore from '@/app/stores/settings';
 import useHomeStore from '@/app/stores/home';
 import { useTerminalOutput } from '@/app/contexts/terminal-output';
-import Placeholder from '@/app/components/placeholder';
 
 const schema = yup
   .object()
@@ -173,7 +172,6 @@ export default function Home() {
           </form>
         </Form>
       </div>
-      <Placeholder />
     </>
   )
 }
