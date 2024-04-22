@@ -20,11 +20,8 @@ import {
   FormItem,
   FormLabel
 } from "@/app/components/ui/form";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/app/components/ui/popover"
+import MDPopover from '@/app/components/md-popover';
+import { misc } from '@/app/functions';
 
 const schema = yup
   .object()
@@ -60,17 +57,6 @@ export default function Settings() {
     reset,
   } = form;
 
-  const handleEscapePress = () => {
-    const event = new KeyboardEvent('keydown', {
-      key: 'Escape',
-      code: 'Escape',
-      keyCode: 27,
-      bubbles: true,
-      cancelable: false,
-    });
-
-    document.dispatchEvent(event);
-  };
 
   const onSubmit: SubmitHandler<SettingsForm> = async (data: SettingsForm) => {
     setClickable(false);
@@ -93,7 +79,7 @@ export default function Settings() {
     try {
       resetSettings();
       reset(defaultSettings);
-      handleEscapePress();
+      misc.handleEscapePress();
       toast.success('Settings restored to their original defaults', toastify.optionSet2);
     } catch (error) {
       toast.dismiss(toastId.current as Id);
@@ -163,28 +149,11 @@ export default function Settings() {
               >
                 Save
               </Button>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant="outline" className="mb-2 -mt-2">
-                    Reset settings
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent>
-                  <div className="grid gap-4">
-                    <div className="space-y-2">
-                      <h4 className="font-medium leading-none">Confirm</h4>
-                      <p className="text-sm text-muted-foreground">This action cannot be undone!</p>
-                    </div>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => onReset()}
-                    >
-                      I understand
-                    </Button>
-                  </div>
-                </PopoverContent>
-              </Popover>
+              <MDPopover
+                buttonText="Reset settings"
+                buttonClasses="mb-2 -mt-2"
+                handleClick={() => onReset()}
+              />
             </fieldset>
           </form>
         </Form>

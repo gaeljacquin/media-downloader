@@ -6,7 +6,8 @@ import { FitAddon } from '@xterm/addon-fit';
 
 import useSettingsStore from '@/app/stores/settings';
 import { useTerminalOutput } from '@/app/contexts/terminal-output';
-import { Button } from "@/app/components/ui/button";
+import MDPopover from '@/app/components/md-popover';
+import { misc } from '@/app/functions';
 
 export default function TerminalDisplay() {
   const terminalRef = useRef<HTMLDivElement>(null);
@@ -20,6 +21,7 @@ export default function TerminalDisplay() {
     terminalInstance?.current?.write('Thank you for using \x1b[31mMedia Downloader\x1b[0m!\r\n');
     terminalInstance?.current?.write('\r\n');
     terminalInstance?.current?.write(`${downloadLocation ?  downloadLocation + ' ' : ''}$ `);
+    misc.handleEscapePress();
   }, [downloadLocation]);
 
   useEffect(() => {
@@ -67,13 +69,11 @@ export default function TerminalDisplay() {
         <div ref={terminalRef} className="w-full h-[50%] xterm bg-black xterm-viewport"></div>
       </div>
       <div className="grid gap-8 p-4">
-        <Button
-          className="mt-5 mb-2"
-          type="button"
-          onClick={() => resetTerminal()}
-        >
-          Clear
-        </Button>
+        <MDPopover
+          buttonText="Clear"
+          buttonClasses="mt-5 mb-2"
+          handleClick={() => resetTerminal()}
+        />
       </div>
     </>
   );
