@@ -71,10 +71,20 @@
     },
     "windows": [
       {
+        "label": "splashscreen",
+        "url": "splashscreen.html",
+        "width": 500,
+        "height": 500,
+        "center": true,
+        "decorations": false
+      },
+      {
         "title": "Media Downloader",
         "width": 1080,
         "height": 720,
         "titleBarStyle": "Transparent",
+        "visible": false,
+        "center": true,
         "fileDropEnabled": false
       }
     ],
