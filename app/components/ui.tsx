@@ -12,7 +12,7 @@ export default function UI() {
     <div className="grid h-screen w-full pl-[56px]">
       <ActivityBar />
       <div className="flex flex-col">
-        <Header />
+        <Header view={view}/>
         <main className="grid flex-1 gap-4 overflow-auto p-4 grid-cols-1">
           {view === View.Home && <Home />}
           {view === View.Logs && <Logs />}

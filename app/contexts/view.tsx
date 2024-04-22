@@ -7,7 +7,7 @@ export enum View {
 }
 
 interface ViewContextProps {
-  view: View | null;
+  view: View;
   switchView: (view: View) => void;
 }
 

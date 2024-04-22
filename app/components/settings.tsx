@@ -111,7 +111,6 @@ export default function Settings() {
             className="grid w-full items-start gap-8"
           >
             <fieldset className="grid gap-8 rounded-lg border p-4">
-              <legend className="-ml-1 px-1 text-sm font-medium">Settings</legend>
               <div className="grid gap-3">
                 <Label htmlFor="saveTo">Save to</Label>
                 <Input
@@ -158,35 +157,35 @@ export default function Settings() {
                   )}
                 />
               </div>
-            </fieldset>
-            <Button
-              className={`mt-5 ${!clickable && "bg-gray-600 hover:cursor-not-allowed"}`}
-              type="submit"
-            >
-              Save
-            </Button>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button variant="outline">
-                  Reset settings
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent>
-                <div className="grid gap-4">
-                  <div className="space-y-2">
-                    <h4 className="font-medium leading-none">Confirm</h4>
-                    <p className="text-sm text-muted-foreground">This action cannot be undone!</p>
-                  </div>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => onReset()}
-                  >
-                    I understand
+              <Button
+                className={`mt-2 ${!clickable && "bg-gray-600 hover:cursor-not-allowed"}`}
+                type="submit"
+              >
+                Save
+              </Button>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" className="mb-2 -mt-2">
+                    Reset settings
                   </Button>
-                </div>
-              </PopoverContent>
-            </Popover>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <div className="grid gap-4">
+                    <div className="space-y-2">
+                      <h4 className="font-medium leading-none">Confirm</h4>
+                      <p className="text-sm text-muted-foreground">This action cannot be undone!</p>
+                    </div>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => onReset()}
+                    >
+                      I understand
+                    </Button>
+                  </div>
+                </PopoverContent>
+              </Popover>
+            </fieldset>
           </form>
         </Form>
       </div>
