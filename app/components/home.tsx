@@ -159,13 +159,32 @@ export default function Home() {
               </fieldset>
               {clickable ?
                 <Button
-                  className="mt-2 mb-2"
+                  className="mt-2 mb-20"
                   type="submit"
                 >
                   Download
                 </Button>
               :
-                <div className="sk-center sk-plane mb-2"></div>
+                <>
+                  <div className="sk-circle-fade sk-center mb-2">
+                    <div className="sk-circle-fade-dot"></div>
+                    <div className="sk-circle-fade-dot"></div>
+                    <div className="sk-circle-fade-dot"></div>
+                    <div className="sk-circle-fade-dot"></div>
+                    <div className="sk-circle-fade-dot"></div>
+                    <div className="sk-circle-fade-dot"></div>
+                    <div className="sk-circle-fade-dot"></div>
+                    <div className="sk-circle-fade-dot"></div>
+                    <div className="sk-circle-fade-dot"></div>
+                    <div className="sk-circle-fade-dot"></div>
+                    <div className="sk-circle-fade-dot"></div>
+                    <div className="sk-circle-fade-dot"></div>
+                  </div>
+                  <div className="text-center">
+                    <p>Download in progress...</p>
+                    <p>See logs for more details</p>
+                  </div>
+                </>
               }
             </fieldset>
             <Input
