@@ -1,4 +1,3 @@
-import { ChildProcess } from '@tauri-apps/api/shell';
 import { createContext, ReactElement, useContext, useState } from 'react';
 
 interface TerminalOutputContextProps {

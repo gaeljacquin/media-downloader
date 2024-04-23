@@ -7,7 +7,6 @@ import { FitAddon } from '@xterm/addon-fit';
 import useSettingsStore from '@/app/stores/settings';
 import { useTerminalOutput } from '@/app/contexts/terminal-output';
 import MDPopover from '@/app/components/md-popover';
-import { misc } from '@/app/functions';
 
 export default function TerminalDisplay() {
   const terminalRef = useRef<HTMLDivElement>(null);
@@ -21,7 +20,6 @@ export default function TerminalDisplay() {
     terminalInstance?.current?.write('Thank you for using \x1b[31mMedia Downloader\x1b[0m!\r\n');
     terminalInstance?.current?.write('\r\n');
     terminalInstance?.current?.write(`${downloadLocation ?  downloadLocation + ' ' : ''}$ `);
-    misc.handleEscapePress();
   }, [downloadLocation]);
 
   useEffect(() => {

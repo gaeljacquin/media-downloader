@@ -21,7 +21,7 @@ import {
   FormLabel
 } from "@/app/components/ui/form";
 import MDPopover from '@/app/components/md-popover';
-import { misc } from '@/app/functions';
+import { icons } from "@/app/components/icons";
 
 const schema = yup
   .object()
@@ -38,8 +38,10 @@ export default function Settings() {
   const {
     downloadLocation,
     setDownloadLocation,
+    resetDownloadLocation,
     terminalFontSize,
     setTerminalFontSize,
+    resetTerminalFontSize,
     notifications,
     setNotifications,
     resetSettings,
@@ -57,6 +59,28 @@ export default function Settings() {
     reset,
   } = form;
 
+  async function replaceWithTilde(path: string) {
+    const homeDir = await (await import('@tauri-apps/api/path')).homeDir(); // dynamically importing module to fix console error
+
+    if (path.startsWith(homeDir)) {
+      return path.replace(homeDir, '~/').replace('\\', '/');
+    }
+
+    return path;
+  }
+
+  async function browse() {
+    const open = await (await import('@tauri-apps/api/dialog')).open;
+    const selectedDir = await open({
+      directory: true,
+      multiple: false,
+      defaultPath: await (await import('@tauri-apps/api/path')).homeDir(),
+    });
+
+    selectedDir && replaceWithTilde(selectedDir as string).then(selectedDirTilde => {
+      form.setValue('saveTo', selectedDirTilde);
+    });
+  }
 
   const onSubmit: SubmitHandler<SettingsForm> = async (data: SettingsForm) => {
     setClickable(false);
@@ -79,7 +103,6 @@ export default function Settings() {
     try {
       resetSettings();
       reset(defaultSettings);
-      misc.handleEscapePress();
       toast.success('Settings restored to their original defaults', toastify.optionSet2);
     } catch (error) {
       toast.dismiss(toastId.current as Id);
@@ -99,27 +122,57 @@ export default function Settings() {
             <fieldset className="grid gap-8 rounded-lg border p-4">
               <div className="grid gap-3">
                 <Label htmlFor="saveTo">Save to</Label>
-                <Input
-                  id="saveTo"
-                  className="form-text-input"
-                  {...register('saveTo', {
-                    value: downloadLocation,
-                  })}
-                  type="text"
-                  placeholder={`Defaults to ${defaultSettings.downloadLocation}`}
-                  autoComplete="off"
-                />
+                <div className="flex items-center gap-2">
+                  <Input
+                    id="saveTo"
+                    className="form-text-input bg-gray-300"
+                    {...register('saveTo', {
+                      value: downloadLocation,
+                    })}
+                    type="label"
+                    autoComplete="off"
+                    readOnly
+                  />
+                  <Button
+                    aria-label="Browse"
+                    className={`rounded border border-gray-300`}
+                    size="icon"
+                    variant="ghost"
+                    type="button"
+                    onClick={() => browse()}
+                  >
+                    <icons.EllipsisIcon className="h-5 w-5" />
+                  </Button>
+                  <MDPopover
+                    buttonText="Reset"
+                    buttonClasses=""
+                    handleClick={() => {
+                      resetDownloadLocation();
+                      form.setValue('saveTo', defaultSettings.downloadLocation);
+                    }}
+                  />
+                </div>
               </div>
               <div className="grid gap-3">
                 <Label htmlFor="terminalFontSize">Terminal Font Size</Label>
-                <Input
-                  id="terminalFontSize"
-                  {...register('terminalFontSize', {
-                    value: terminalFontSize,
-                  })}
-                  placeholder={terminalFontSize.toString()}
-                  type="number"
-                />
+                <div className="flex items-center gap-2">
+                  <Input
+                    id="terminalFontSize"
+                    {...register('terminalFontSize', {
+                      value: terminalFontSize,
+                    })}
+                    placeholder={terminalFontSize.toString()}
+                    type="number"
+                  />
+                  <MDPopover
+                    buttonText="Reset"
+                    buttonClasses=""
+                    handleClick={() => {
+                      resetTerminalFontSize();
+                      form.setValue('terminalFontSize', defaultSettings.terminalFontSize);
+                    }}
+                  />
+                </div>
               </div>
               <div className="grid gap-3">
                 <FormField
@@ -150,7 +203,7 @@ export default function Settings() {
                 Save
               </Button>
               <MDPopover
-                buttonText="Reset settings"
+                buttonText="Reset all settings"
                 buttonClasses="mb-2 -mt-2"
                 handleClick={() => onReset()}
               />

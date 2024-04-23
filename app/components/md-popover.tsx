@@ -5,7 +5,8 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/app/components/ui/popover"
+} from "@/app/components/ui/popover";
+import { misc } from '@/app/functions';
 
 type MDPopoverProps = {
   buttonText: string
@@ -31,7 +32,11 @@ export default function MDPopover({ ...props }: MDPopoverProps) {
             <Button
               type="button"
               variant="outline"
-              onClick={props.handleClick}
+              onClick={
+              () => {
+                props.handleClick();
+                misc.handleEscapePress();
+              }}
             >
               I understand
             </Button>
