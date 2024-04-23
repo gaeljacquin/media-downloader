@@ -65,7 +65,7 @@ export default function Home() {
     }
 
     if (permissionGranted) {
-      sendNotification({ title: 'yt-dlp GUI', body: notificationBody  });
+      sendNotification({ title: 'Media Downloader', body: notificationBody });
     }
   }
 
@@ -121,8 +121,8 @@ export default function Home() {
             className="grid w-full items-start gap-8"
           >
             <fieldset className="grid gap-8 rounded-lg border p-4">
-              <legend className="-ml-1 px-1 text-sm font-medium">Link</legend>
               <div className="grid gap-3">
+                <legend className="-ml-1 px-1 text-sm font-medium">URL</legend>
                 <Input
                   id="url"
                   aria-invalid={errors.url ? "true" : "false"}
@@ -134,45 +134,64 @@ export default function Home() {
                 />
                 {errors.url && <span role="alert" className="text-sm font-semibold p-2 rounded bg-white text-red-500">{errors.url.message}</span>}
               </div>
-            </fieldset>
-            <fieldset className="grid gap-8 rounded-lg border p-4">
-              <legend className="-ml-1 px-1 text-sm font-medium">Options</legend>
-              <FormField
-                name="audioOnly"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                        id="audioOnly"
-                        {...register('audioOnly')}
-                      />
-                    </FormControl>
-                    <div className="space-y-1 leading-none">
-                      <FormLabel>
-                        Audio only
-                      </FormLabel>
-                    </div>
-                  </FormItem>
-                )}
-              />
+              <fieldset className="grid gap-8 rounded-lg border p-4">
+                <legend className="-ml-1 px-1 text-sm font-medium">Options</legend>
+                <FormField
+                  name="audioOnly"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-start space-x-2 space-y-0">
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                          id="audioOnly"
+                          {...register('audioOnly')}
+                        />
+                      </FormControl>
+                      <div className="space-y-1 leading-none">
+                        <FormLabel>
+                          Audio only
+                        </FormLabel>
+                      </div>
+                    </FormItem>
+                  )}
+                />
+              </fieldset>
+              {clickable ?
+                <Button
+                  className="mt-2 mb-20"
+                  type="submit"
+                >
+                  Download
+                </Button>
+              :
+                <>
+                  <div className="sk-circle-fade sk-center mb-2">
+                    <div className="sk-circle-fade-dot"></div>
+                    <div className="sk-circle-fade-dot"></div>
+                    <div className="sk-circle-fade-dot"></div>
+                    <div className="sk-circle-fade-dot"></div>
+                    <div className="sk-circle-fade-dot"></div>
+                    <div className="sk-circle-fade-dot"></div>
+                    <div className="sk-circle-fade-dot"></div>
+                    <div className="sk-circle-fade-dot"></div>
+                    <div className="sk-circle-fade-dot"></div>
+                    <div className="sk-circle-fade-dot"></div>
+                    <div className="sk-circle-fade-dot"></div>
+                    <div className="sk-circle-fade-dot"></div>
+                  </div>
+                  <div className="text-center">
+                    <p>Download in progress...</p>
+                    <p>See logs for more details</p>
+                  </div>
+                </>
+              }
             </fieldset>
             <Input
               id="saveTo"
               {...register('saveTo')}
               type="hidden"
             />
-            {clickable ?
-              <Button
-                className="mt-5"
-                type="submit"
-              >
-                Download
-              </Button>
-            :
-              <div className="sk-center sk-plane"></div>
-            }
           </form>
         </Form>
       </div>

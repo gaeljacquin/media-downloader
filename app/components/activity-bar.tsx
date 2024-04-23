@@ -1,14 +1,11 @@
 'use client';
 
-import Image from "next/image";
-
 import { icons } from "@/app/components/icons";
 import { Button } from "@/app/components/ui/button";
 import { TooltipTrigger, TooltipContent, Tooltip, TooltipProvider } from "@/app/components/ui/tooltip";
 import { View, useView } from '@/app/contexts/view';
 
 export default function ActivityBar() {
-  const { Settings2Icon, HomeIcon, EyeOffIcon, TerminalSquareIcon } = icons;
   const { view, switchView } = useView();
 
   const invokeHideSystemTray = async () => {
@@ -18,17 +15,6 @@ export default function ActivityBar() {
 
   return (
     <aside className="inset-y fixed  left-0 z-20 flex h-full flex-col border-r">
-      <div className="border-b border-transparent p-2">
-        <Image
-          src="/images/favicon.ico"
-          alt="yt-dlp icon"
-          className="w-10 h-auto"
-          width={0}
-          height={0}
-          unoptimized
-          priority
-        />
-      </div>
       <nav className="grid gap-1 p-2">
         <TooltipProvider>
           <Tooltip>
@@ -40,7 +26,7 @@ export default function ActivityBar() {
                 variant="ghost"
                 onClick={() => view !== View.Home ? switchView(View.Home) : null}
               >
-                <HomeIcon className="h-5 w-5" />
+                <icons.HomeIcon className="h-5 w-5" />
               </Button>
             </TooltipTrigger>
             <TooltipContent side="right" sideOffset={5}>
@@ -56,7 +42,7 @@ export default function ActivityBar() {
                 variant="ghost"
                 onClick={() => view !== View.Logs ? switchView(View.Logs) : null}
               >
-                <TerminalSquareIcon className="size-5" />
+                <icons.TerminalSquareIcon className="size-5" />
               </Button>
             </TooltipTrigger>
             <TooltipContent side="right" sideOffset={5}>
@@ -72,11 +58,27 @@ export default function ActivityBar() {
                 variant="ghost"
                 onClick={() => view !== View.Settings ? switchView(View.Settings) : null}
               >
-                <Settings2Icon className="size-5" />
+                <icons.Settings2Icon className="size-5" />
               </Button>
             </TooltipTrigger>
             <TooltipContent side="right" sideOffset={5}>
               Settings
+            </TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                aria-label="About"
+                className={`rounded-lg ${view === View.About && 'bg-muted'}`}
+                size="icon"
+                variant="ghost"
+                onClick={() => view !== View.About ? switchView(View.About) : null}
+              >
+                <icons.InfoCircledIcon className="size-5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="right" sideOffset={5}>
+              About
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -86,7 +88,7 @@ export default function ActivityBar() {
           <Tooltip>
             <TooltipTrigger asChild>
               <Button aria-label="Hide in system tray" className="mt-auto rounded-lg" size="icon" variant="ghost" onClick={invokeHideSystemTray}>
-                <EyeOffIcon className="size-5" />
+                <icons.EyeOffIcon className="size-5" />
               </Button>
             </TooltipTrigger>
             <TooltipContent side="right" sideOffset={5}>

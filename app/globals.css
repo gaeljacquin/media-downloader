@@ -55,6 +55,8 @@
   }
   body {
     @apply bg-background text-foreground;
+
+    --sk-color: hsl(var(--primary));
   }
 }
 
