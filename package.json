@@ -1,7 +1,7 @@
 {
   "name": "media-downloader",
   "title": "Media Downloader",
-  "description": "Save audio & video locally through a GUI wrapper for yt-dlp",
+  "description": "yt-dlp GUI wrapper",
   "author": "Gaël Jacquin",
   "version": "0.5.0",
   "scripts": {

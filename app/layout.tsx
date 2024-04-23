@@ -12,7 +12,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Media Downloader",
-  description: "Save audio & video locally through a GUI wrapper for yt-dlp",
+  description: "yt-dlp GUI wrapper",
 };
 
 export default function RootLayout({
