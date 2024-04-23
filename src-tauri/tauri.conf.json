@@ -7,8 +7,8 @@
     "distDir": "../out"
   },
   "package": {
-    "productName": "yt-dlp-gui",
-    "version": "0.4.0"
+    "productName": "Media Downloader",
+    "version": "0.5.0"
   },
   "tauri": {
     "allowlist": {
@@ -25,6 +25,17 @@
         ]
       },
       "notification": {
+        "all": true
+      },
+      "dialog": {
+        "all": false,
+        "ask": false,
+        "confirm": false,
+        "message": false,
+        "open": true,
+        "save": false
+      },
+      "path": {
         "all": true
       }
     },
@@ -45,7 +56,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.yt-dlp-gui.tauri",
+      "identifier": "com.media-downloader.tauri",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
@@ -71,11 +82,21 @@
     },
     "windows": [
       {
+        "label": "splashscreen",
+        "url": "splashscreen.html",
+        "width": 500,
+        "height": 500,
+        "center": true,
+        "decorations": false
+      },
+      {
+        "title": "Media Downloader",
         "width": 1080,
         "height": 720,
-        "fileDropEnabled": false,
         "titleBarStyle": "Transparent",
-        "title": "yt-dlp GUI"
+        "visible": false,
+        "center": true,
+        "fileDropEnabled": false
       }
     ],
     "systemTray": {

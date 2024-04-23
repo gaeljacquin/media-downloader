@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { Terminal } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
 
 import useSettingsStore from '@/app/stores/settings';
 import { useTerminalOutput } from '@/app/contexts/terminal-output';
+import MDPopover from '@/app/components/md-popover';
 
 export default function TerminalDisplay() {
   const terminalRef = useRef<HTMLDivElement>(null);
@@ -14,12 +15,19 @@ export default function TerminalDisplay() {
   const { terminalFontSize, downloadLocation } = useSettingsStore();
   const { output } = useTerminalOutput();
 
+  const resetTerminal = useCallback(() => {
+    terminalInstance?.current?.reset();
+    terminalInstance?.current?.write('Thank you for using \x1b[31mMedia Downloader\x1b[0m!\r\n');
+    terminalInstance?.current?.write('\r\n');
+    terminalInstance?.current?.write(`${downloadLocation ?  downloadLocation + ' ' : ''}$ `);
+  }, [downloadLocation]);
+
   useEffect(() => {
     if (terminalRef.current && !Boolean(terminalInitRef.current)) {
       terminalInstance.current = new Terminal({
         fontFamily: 'Inter, monospace',
         fontSize: terminalFontSize,
-        scrollback: 0,
+        scrollback: 9999999,
         cursorStyle: 'bar',
         cursorInactiveStyle: 'bar',
         cursorBlink: true,
@@ -28,12 +36,10 @@ export default function TerminalDisplay() {
       terminalInstance.current.loadAddon(fitAddon);
       terminalInstance.current.open(terminalRef.current);
       fitAddon.fit();
-      terminalInstance.current.write('Thank you for using \x1b[31myt-dlp GUI\x1b[0m!\r\n');
-      terminalInstance.current.write('\r\n');
-      terminalInstance.current.write(`${downloadLocation ?  downloadLocation + ' ' : ''}$ `);
+      resetTerminal();
       terminalInitRef.current = true;
     }
-  }, [terminalFontSize, downloadLocation]);
+  }, [terminalFontSize, downloadLocation, resetTerminal]);
 
   useEffect(() => {
     const fitAddon = new FitAddon();
@@ -56,8 +62,17 @@ export default function TerminalDisplay() {
   }, [output]);
 
   return (
-    <div className="relative flex h-full flex-col rounded-xl bg-black p-4 lg:col-span-2">
-      <div ref={terminalRef} className="w-full h-full xterm xterm-viewport"></div>
-    </div>
+    <>
+      <div className="rounded-xl bg-black p-4">
+        <div ref={terminalRef} className="w-full h-[50%] xterm bg-black xterm-viewport"></div>
+      </div>
+      <div className="grid gap-8 p-4">
+        <MDPopover
+          buttonText="Clear"
+          buttonClasses="mt-5 mb-2"
+          handleClick={() => resetTerminal()}
+        />
+      </div>
+    </>
   );
 }

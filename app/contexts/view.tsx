@@ -4,10 +4,11 @@ export enum View {
   Home,
   Logs,
   Settings,
+  About,
 }
 
 interface ViewContextProps {
-  view: View | null;
+  view: View;
   switchView: (view: View) => void;
 }
 
