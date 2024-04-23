@@ -4,6 +4,18 @@
 use tauri::{
   CustomMenuItem, Manager, SystemTray, SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem, Window
 };
+use std::env;
+use std::fs;
+use toml::Value;
+use serde::{Serialize, Deserialize};
+
+#[derive(Serialize, Deserialize)]
+struct Info<'a> {
+  version: &'a str,
+  title: &'a str,
+  description: &'a str,
+  author: &'a str,
+}
 
 #[tauri::command]
 fn hide_system_tray(window: Window) {
@@ -23,6 +35,26 @@ async fn close_splashscreen(window: Window) {
   }
 
   window.get_window("main").expect("no window labeled 'main' found").show().unwrap();
+}
+
+#[tauri::command]
+fn get_app_info() -> std::string::String {
+  let title = "Media Downloader";
+  let cargo_toml = fs::read_to_string("Cargo.toml").expect("Failed to read Cargo.toml");
+  let cargo_toml: Value = toml::from_str(&cargo_toml).expect("Failed to parse Cargo.toml");
+  let version = cargo_toml["package"]["version"].as_str().expect("Version not found");
+  let description = cargo_toml["package"]["description"].as_str().expect("Description not found");
+  let authors = cargo_toml["package"]["authors"].as_array().expect("Authors not found");
+  let author = authors.get(0).expect("Author not found").as_str().expect("Author is not a string");
+  let info = Info {
+    version,
+    title,
+    description,
+    author,
+  };
+  let data = serde_json::to_string(&info).expect("Failed to serialize data");
+
+  return data;
 }
 
 fn main() {
@@ -100,7 +132,7 @@ fn main() {
       }
       _ => {}
     })
-    .invoke_handler(tauri::generate_handler![hide_system_tray, close_splashscreen])
+    .invoke_handler(tauri::generate_handler![hide_system_tray, close_splashscreen, get_app_info])
     .run(tauri::generate_context!())
     .expect("error while running tauri application")
   ;

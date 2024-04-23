@@ -4,6 +4,7 @@ export enum View {
   Home,
   Logs,
   Settings,
+  About,
 }
 
 interface ViewContextProps {
