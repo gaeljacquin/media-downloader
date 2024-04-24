@@ -2,11 +2,7 @@
 
 import Image from "next/image";
 
-import useAboutStore from '@/app/stores/about';
-
 export default function About() {
-  const { author, title, description, version } = useAboutStore();
-
   return (
     <>
       <div className="relative flex-col items-start gap-8 flex" x-chunk="dashboard-03-chunk-0">
@@ -24,10 +20,10 @@ export default function About() {
               />
             </div>
             <div className="grid justify-center">
-              <h1>{title} v{version} by {author}</h1>
+              <h1>Media Downloader v0.5.1 by Gaël Jacquin</h1>
             </div>
             <div className="grid justify-center">
-              <h1>{description}</h1>
+              <h1>yt-dlp GUI wrapper</h1>
             </div>
             <div className="grid justify-center">
               <h1>Special thanks to the yt-dlp team</h1>
