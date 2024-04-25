@@ -125,7 +125,7 @@ export default function Settings() {
                 <div className="flex items-center gap-2">
                   <Input
                     id="saveTo"
-                    className="form-text-input bg-gray-300"
+                    className="form-text-input bg-gray-400"
                     {...register('saveTo', {
                       value: downloadLocation,
                     })}
