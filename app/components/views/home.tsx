@@ -76,7 +76,7 @@ export default function Home() {
 
     try {
       const params = ytdlp.addOptions(data);
-      const command = Command.sidecar('binaries/yt-dlp', params);
+      const command = Command.sidecar('binaries/yt-dlp', params, { encoding: 'utf-8' });
 
       command.stdout.on('data', (line) => {
         console.log(`Stdout: ${line}`);
