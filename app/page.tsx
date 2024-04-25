@@ -9,7 +9,6 @@ import { ViewProvider } from '@/app/contexts/view';
 import { TerminalOutputProvider } from '@/app/contexts/terminal-output';
 
 export default function Home() {
-
   useEffect(() => {
     invoke('close_splashscreen');
   }, [])

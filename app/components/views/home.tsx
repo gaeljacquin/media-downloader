@@ -70,12 +70,13 @@ export default function Home() {
   }
 
   const onSubmit: SubmitHandler<HomeForm> = async (data: HomeForm) => {
+    let output;
     setClickable(false);
     setOutput('Starting download...\r\n');
 
     try {
       const params = ytdlp.addOptions(data);
-      const command = Command.sidecar('binaries/yt-dlp', params);
+      const command = Command.sidecar('binaries/yt-dlp', params, { encoding: 'utf-8' });
 
       command.stdout.on('data', (line) => {
         console.log(`Stdout: ${line}`);
@@ -87,19 +88,18 @@ export default function Home() {
         setOutput(`\r\n${line}`);
       });
 
-      const output = await command.execute();
-
+      output = await command.execute();
       notifications && notify(output.code);
-
-      setOutput(`\r\n${downloadLocation ?  downloadLocation + ' ' : ''}$ `);
-      setClickable(true);
     } catch (error) {
       setOutput(`\r\n${error}`);
-      setOutput(`\r\n${downloadLocation ?  downloadLocation + ' ' : ''}$ `);
-      setClickable(true);
       console.error('Error: ', error);
+    } finally {
+      if (typeof output?.code === "number") {
+        setClickable(true);
+        setOutput(`\r\n${downloadLocation} $ `);
+      }
     }
-  };
+  }
 
   useEffect(() => {
     const subscription = watch((value) =>
