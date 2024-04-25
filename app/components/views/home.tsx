@@ -22,6 +22,8 @@ import {
 import useSettingsStore from '@/app/stores/settings';
 import useHomeStore from '@/app/stores/home';
 import useLogsStore from '@/app/stores/logs';
+import MDPopover from '@/app/components/md-popover';
+import { misc } from '@/app/functions';
 
 const schema = yup
   .object()
@@ -69,6 +71,29 @@ export default function Home() {
     }
   }
 
+  const getKillProcessByOSType = async () => {
+    const { type } = await import('@tauri-apps/api/os');
+    const osType = await type();
+    let process, args;
+
+    switch (osType) {
+      case 'Windows_NT':
+        process = 'win-kill-task';
+        args = ['/IM', 'yt-dlp.exe', '/F'];
+        break;
+      case 'Linux':
+      case 'Darwin':
+        process = 'pkill';
+        args = ['-9', 'yt-dlp'];
+      default:
+        process = '';
+        args = [''];
+        console.error('OS type not supported');
+    }
+
+    return { process, args };
+  }
+
   const onSubmit: SubmitHandler<HomeForm> = async (data: HomeForm) => {
     let output;
     setClickable(false);
@@ -97,6 +122,19 @@ export default function Home() {
         setLogs(`\r\n`);
       }
     }
+  }
+
+  const onCancel = async () => {
+    misc.handleEscapePress();
+    setClickable(true);
+
+    const command = await getKillProcessByOSType().then(({ process, args }: { process: string, args: string[] }) => new Command(process, args));
+
+    command.on('close', data => {
+      console.log(`command finished with code ${data.code} and signal ${data.signal}`);
+    });
+
+    await command.execute();
   }
 
   useEffect(() => {
@@ -155,14 +193,13 @@ export default function Home() {
                   )}
                 />
               </fieldset>
-              {clickable ?
-                <Button
-                  className="mt-2 mb-20"
-                  type="submit"
-                >
-                  Download
-                </Button>
-              :
+              <Button
+                className={`mt-5 ${!clickable ? 'bg-gray-600 hover:cursor-not-allowed' : 'mb-64'}`}
+                type="submit"
+              >
+                Download
+              </Button>
+              {!clickable && (
                 <>
                   <div className="sk-circle-fade sk-center mb-2">
                     <div className="sk-circle-fade-dot"></div>
@@ -182,8 +219,13 @@ export default function Home() {
                     <p>Download in progress...</p>
                     <p>See logs for more details</p>
                   </div>
+                  <MDPopover
+                    buttonText="Cancel"
+                    buttonClasses="mt-2 mb-4"
+                    handleClick={() => onCancel()}
+                  />
                 </>
-              }
+              )}
             </fieldset>
             <Input
               id="saveTo"

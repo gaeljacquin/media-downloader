@@ -15,11 +15,22 @@
       "shell": {
         "open": true,
         "sidecar": true,
+        "execute": true,
         "scope": [
           {
             "name": "binaries/yt-dlp",
             "open": true,
             "sidecar": true,
+            "args": true
+          },
+          {
+            "name": "win-kill-task",
+            "cmd": "taskkill",
+            "args": true
+          },
+          {
+            "name": "nix-task",
+            "cmd": "pkill",
             "args": true
           }
         ]
@@ -34,6 +45,9 @@
         "message": false,
         "open": true,
         "save": false
+      },
+      "os": {
+        "all": true
       },
       "path": {
         "all": true
