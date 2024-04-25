@@ -21,7 +21,7 @@ import {
 } from "@/app/components/ui/form";
 import useSettingsStore from '@/app/stores/settings';
 import useHomeStore from '@/app/stores/home';
-import { useTerminalOutput } from '@/app/contexts/terminal-output';
+import useLogsStore from '@/app/stores/logs';
 
 const schema = yup
   .object()
@@ -35,7 +35,7 @@ const schema = yup
 export default function Home() {
   const { downloadLocation, notifications } = useSettingsStore();
   const { formData, setFormData, clickable, setClickable } = useHomeStore();
-  const { setOutput } = useTerminalOutput();
+  const { setLogs } = useLogsStore();
   const form = useForm<HomeForm>({
     resolver: yupResolver(schema),
     defaultValues: formData,
@@ -72,31 +72,29 @@ export default function Home() {
   const onSubmit: SubmitHandler<HomeForm> = async (data: HomeForm) => {
     let output;
     setClickable(false);
-    setOutput('Starting download...\r\n');
 
     try {
       const params = ytdlp.addOptions(data);
       const command = Command.sidecar('binaries/yt-dlp', params, { encoding: 'utf-8' });
 
       command.stdout.on('data', (line) => {
+        setLogs(`${line}\r\n`);
         console.log(`Stdout: ${line}`);
-        setOutput(`\r\n${line}`);
       });
 
       command.stderr.on('data', (line) => {
+        setLogs(`${line}\r\n`);
         console.log(`Stderr: ${line}`);
-        setOutput(`\r\n${line}`);
       });
 
       output = await command.execute();
       notifications && notify(output.code);
     } catch (error) {
-      setOutput(`\r\n${error}`);
       console.error('Error: ', error);
     } finally {
       if (typeof output?.code === "number") {
         setClickable(true);
-        setOutput(`\r\n${downloadLocation} $ `);
+        setLogs(`\r\n`);
       }
     }
   }
