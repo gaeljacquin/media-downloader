@@ -83,7 +83,7 @@ export default function Home() {
         break;
       case 'Linux':
       case 'Darwin':
-        process = 'pkill';
+        process = 'nix-task';
         args = ['-9', 'yt-dlp'];
       default:
         process = '';
@@ -196,6 +196,7 @@ export default function Home() {
               <Button
                 className={`mt-5 ${!clickable ? 'bg-gray-600 hover:cursor-not-allowed' : 'mb-64'}`}
                 type="submit"
+                disabled={!clickable}
               >
                 Download
               </Button>
