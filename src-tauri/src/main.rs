@@ -2,12 +2,13 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 use tauri::{
-  CustomMenuItem, Manager, SystemTray, SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem, Window
+  CustomMenuItem, Manager, SystemTray, SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem, Window, command
 };
 use std::env;
 use std::fs;
 use toml::Value;
 use serde::{Serialize, Deserialize};
+use std::process::Command;
 
 #[derive(Serialize, Deserialize)]
 struct Info<'a> {
@@ -55,6 +56,18 @@ fn get_app_info() -> std::string::String {
   let data = serde_json::to_string(&info).expect("Failed to serialize data");
 
   return data;
+}
+
+#[command]
+fn check_cmd_in_path() -> bool {
+  let output = Command::new("yt-dlp")
+    .arg("--version")
+    .output();
+
+  match output {
+    Ok(_) => true,
+    Err(_) => false,
+  }
 }
 
 fn main() {
@@ -132,7 +145,7 @@ fn main() {
       }
       _ => {}
     })
-    .invoke_handler(tauri::generate_handler![hide_system_tray, close_splashscreen, get_app_info])
+    .invoke_handler(tauri::generate_handler![hide_system_tray, close_splashscreen, get_app_info, check_cmd_in_path])
     .run(tauri::generate_context!())
     .expect("error while running tauri application")
   ;
