@@ -1,6 +1,6 @@
 [package]
 name = "app"
-version = "0.6.1"
+version = "0.7.0"
 description = "yt-dlp GUI wrapper"
 authors = ["Gaël Jacquin"]
 license = "Unlicense license"
