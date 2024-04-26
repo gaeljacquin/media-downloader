@@ -27,7 +27,7 @@ const schema = yup
   .object()
   .shape({
     saveTo: yup.string().optional(),
-    terminalFontSize: yup.number().required(),
+    logsFontSize: yup.number().required(),
     notifications: yup.boolean().required(),
   })
   .required();
@@ -39,9 +39,9 @@ export default function Settings() {
     downloadLocation,
     setDownloadLocation,
     resetDownloadLocation,
-    terminalFontSize,
-    setTerminalFontSize,
-    resetTerminalFontSize,
+    logsFontSize,
+    setLogsFontSize,
+    resetLogsFontSize,
     notifications,
     setNotifications,
     resetSettings,
@@ -87,7 +87,7 @@ export default function Settings() {
 
     try {
       setDownloadLocation(data.saveTo ?? '');
-      setTerminalFontSize(data.terminalFontSize);
+      setLogsFontSize(data.logsFontSize);
       setNotifications(data.notifications);
       toast.success('Settings saved', toastify.optionSet2);
       setClickable(true);
@@ -154,22 +154,22 @@ export default function Settings() {
                 </div>
               </div>
               <div className="grid gap-3">
-                <Label htmlFor="terminalFontSize">Terminal Font Size</Label>
+                <Label htmlFor="logsFontSize">Logs Font Size</Label>
                 <div className="flex items-center gap-2">
                   <Input
-                    id="terminalFontSize"
-                    {...register('terminalFontSize', {
-                      value: terminalFontSize,
+                    id="logsFontSize"
+                    {...register('logsFontSize', {
+                      value: logsFontSize,
                     })}
-                    placeholder={terminalFontSize.toString()}
+                    placeholder={logsFontSize.toString()}
                     type="number"
                   />
                   <MDPopover
                     buttonText="Reset"
                     buttonClasses=""
                     handleClick={() => {
-                      resetTerminalFontSize();
-                      form.setValue('terminalFontSize', defaultSettings.terminalFontSize);
+                      resetLogsFontSize();
+                      form.setValue('logsFontSize', defaultSettings.logsFontSize);
                     }}
                   />
                 </div>

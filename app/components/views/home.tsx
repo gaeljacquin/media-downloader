@@ -21,7 +21,9 @@ import {
 } from "@/app/components/ui/form";
 import useSettingsStore from '@/app/stores/settings';
 import useHomeStore from '@/app/stores/home';
-import { useTerminalOutput } from '@/app/contexts/terminal-output';
+import useLogsStore from '@/app/stores/logs';
+import MDPopover from '@/app/components/md-popover';
+import { misc } from '@/app/functions';
 
 const schema = yup
   .object()
@@ -35,7 +37,7 @@ const schema = yup
 export default function Home() {
   const { downloadLocation, notifications } = useSettingsStore();
   const { formData, setFormData, clickable, setClickable } = useHomeStore();
-  const { setOutput } = useTerminalOutput();
+  const { setLogs } = useLogsStore();
   const form = useForm<HomeForm>({
     resolver: yupResolver(schema),
     defaultValues: formData,
@@ -69,36 +71,70 @@ export default function Home() {
     }
   }
 
+  const getKillProcessByOSType = async () => {
+    const { type } = await import('@tauri-apps/api/os');
+    const osType = await type();
+    let process, args;
+
+    switch (osType) {
+      case 'Windows_NT':
+        process = 'win-kill-task';
+        args = ['/IM', 'yt-dlp.exe', '/F'];
+        break;
+      case 'Linux':
+      case 'Darwin':
+        process = 'pkill';
+        args = ['-9', 'yt-dlp'];
+      default:
+        process = '';
+        args = [''];
+        console.error('OS type not supported');
+    }
+
+    return { process, args };
+  }
+
   const onSubmit: SubmitHandler<HomeForm> = async (data: HomeForm) => {
     let output;
     setClickable(false);
-    setOutput('Starting download...\r\n');
 
     try {
       const params = ytdlp.addOptions(data);
       const command = Command.sidecar('binaries/yt-dlp', params, { encoding: 'utf-8' });
 
       command.stdout.on('data', (line) => {
+        setLogs(`${line}\r\n`);
         console.log(`Stdout: ${line}`);
-        setOutput(`\r\n${line}`);
       });
 
       command.stderr.on('data', (line) => {
+        setLogs(`${line}\r\n`);
         console.log(`Stderr: ${line}`);
-        setOutput(`\r\n${line}`);
       });
 
       output = await command.execute();
       notifications && notify(output.code);
     } catch (error) {
-      setOutput(`\r\n${error}`);
       console.error('Error: ', error);
     } finally {
       if (typeof output?.code === "number") {
         setClickable(true);
-        setOutput(`\r\n${downloadLocation} $ `);
+        setLogs(`\r\n`);
       }
     }
+  }
+
+  const onCancel = async () => {
+    misc.handleEscapePress();
+    setClickable(true);
+
+    const command = await getKillProcessByOSType().then(({ process, args }: { process: string, args: string[] }) => new Command(process, args));
+
+    command.on('close', data => {
+      console.log(`command finished with code ${data.code} and signal ${data.signal}`);
+    });
+
+    await command.execute();
   }
 
   useEffect(() => {
@@ -157,14 +193,13 @@ export default function Home() {
                   )}
                 />
               </fieldset>
-              {clickable ?
-                <Button
-                  className="mt-2 mb-20"
-                  type="submit"
-                >
-                  Download
-                </Button>
-              :
+              <Button
+                className={`mt-5 ${!clickable ? 'bg-gray-600 hover:cursor-not-allowed' : 'mb-64'}`}
+                type="submit"
+              >
+                Download
+              </Button>
+              {!clickable && (
                 <>
                   <div className="sk-circle-fade sk-center mb-2">
                     <div className="sk-circle-fade-dot"></div>
@@ -184,8 +219,13 @@ export default function Home() {
                     <p>Download in progress...</p>
                     <p>See logs for more details</p>
                   </div>
+                  <MDPopover
+                    buttonText="Cancel"
+                    buttonClasses="mt-2 mb-4"
+                    handleClick={() => onCancel()}
+                  />
                 </>
-              }
+              )}
             </fieldset>
             <Input
               id="saveTo"

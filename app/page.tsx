@@ -6,7 +6,6 @@ import { useEffect } from 'react';
 
 import UI from "@/app/components/ui";
 import { ViewProvider } from '@/app/contexts/view';
-import { TerminalOutputProvider } from '@/app/contexts/terminal-output';
 
 export default function Home() {
   useEffect(() => {
@@ -16,14 +15,12 @@ export default function Home() {
   return (
     <>
       <ViewProvider>
-        <TerminalOutputProvider>
         <>
           <ToastContainer
             newestOnTop
           />
           <UI />
         </>
-        </TerminalOutputProvider>
       </ViewProvider>
     </>
   )

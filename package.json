@@ -3,7 +3,7 @@
   "title": "Media Downloader",
   "description": "yt-dlp GUI wrapper",
   "author": "Gaël Jacquin",
-  "version": "0.5.2",
+  "version": "0.6.0",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -20,8 +20,6 @@
     "@radix-ui/react-select": "^2.0.0",
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-tooltip": "^1.0.7",
-    "@xterm/addon-fit": "^0.10.0",
-    "@xterm/xterm": "^5.5.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "lucide-react": "^0.365.0",
