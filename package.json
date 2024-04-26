@@ -3,7 +3,7 @@
   "title": "Media Downloader",
   "description": "yt-dlp GUI wrapper",
   "author": "Gaël Jacquin",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

@@ -1,12 +1,14 @@
 'use client';
 
 import { Command } from '@tauri-apps/api/shell';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { isPermissionGranted, requestPermission, sendNotification } from '@tauri-apps/api/notification';
+import { Id, toast } from 'react-toastify';
 import * as yup from 'yup';
 
+import { toastify } from '@/app/constants';
 import { ytdlp } from '@/app/functions';
 import { HomeForm } from '@/app/types/form';
 import { Button } from "@/app/components/ui/button";
@@ -35,6 +37,7 @@ const schema = yup
   .required();
 
 export default function Home() {
+  const toastId = useRef<unknown>(null);
   const { downloadLocation, notifications } = useSettingsStore();
   const { formData, setFormData, clickable, setClickable } = useHomeStore();
   const { setLogs } = useLogsStore();
@@ -79,7 +82,7 @@ export default function Home() {
     switch (osType) {
       case 'Windows_NT':
         process = 'win-kill-task';
-        args = ['/IM', 'yt-dlp.exe', '/F'];
+        args = ['/IM', 'yt-dlp*', '/F'];
         break;
       case 'Linux':
       case 'Darwin':
@@ -96,11 +99,20 @@ export default function Home() {
 
   const onSubmit: SubmitHandler<HomeForm> = async (data: HomeForm) => {
     let output;
+    const { invoke } = await import('@tauri-apps/api/tauri');
+    const isCmdInPath: boolean = await invoke('check_cmd_in_path');
+
+    if (!isCmdInPath) {
+      toast.dismiss(toastId.current as Id);
+      toast.error('yt-dlp not found in PATH', toastify.optionSet1);
+      return false;
+    }
+
     setClickable(false);
 
     try {
       const params = ytdlp.addOptions(data);
-      const command = Command.sidecar('binaries/yt-dlp', params, { encoding: 'utf-8' });
+      const command = new Command('yt-dlp', params, { encoding: 'utf-8' });
 
       command.stdout.on('data', (line) => {
         setLogs(`${line}\r\n`);
@@ -135,6 +147,25 @@ export default function Home() {
     });
 
     await command.execute();
+  }
+
+  const spinner = () => {
+    return (
+      <div className="sk-circle-fade sk-center mb-2">
+        <div className="sk-circle-fade-dot"></div>
+        <div className="sk-circle-fade-dot"></div>
+        <div className="sk-circle-fade-dot"></div>
+        <div className="sk-circle-fade-dot"></div>
+        <div className="sk-circle-fade-dot"></div>
+        <div className="sk-circle-fade-dot"></div>
+        <div className="sk-circle-fade-dot"></div>
+        <div className="sk-circle-fade-dot"></div>
+        <div className="sk-circle-fade-dot"></div>
+        <div className="sk-circle-fade-dot"></div>
+        <div className="sk-circle-fade-dot"></div>
+        <div className="sk-circle-fade-dot"></div>
+      </div>
+    )
   }
 
   useEffect(() => {
@@ -202,20 +233,7 @@ export default function Home() {
               </Button>
               {!clickable && (
                 <>
-                  <div className="sk-circle-fade sk-center mb-2">
-                    <div className="sk-circle-fade-dot"></div>
-                    <div className="sk-circle-fade-dot"></div>
-                    <div className="sk-circle-fade-dot"></div>
-                    <div className="sk-circle-fade-dot"></div>
-                    <div className="sk-circle-fade-dot"></div>
-                    <div className="sk-circle-fade-dot"></div>
-                    <div className="sk-circle-fade-dot"></div>
-                    <div className="sk-circle-fade-dot"></div>
-                    <div className="sk-circle-fade-dot"></div>
-                    <div className="sk-circle-fade-dot"></div>
-                    <div className="sk-circle-fade-dot"></div>
-                    <div className="sk-circle-fade-dot"></div>
-                  </div>
+                  {spinner()}
                   <div className="text-center">
                     <p>Download in progress...</p>
                     <p>See logs for more details</p>

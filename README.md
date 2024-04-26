@@ -9,14 +9,14 @@
 </h1>
 
 <h3 align="center">
-  <a href="https://github.com/yt-dlp/yt-dlp/">yt-dlp</a> GUI wrapper
+  GUI for <a href="https://github.com/yt-dlp/yt-dlp/">yt-dlp</a> (and compatible tools)
 </h3>
 
 ## Features
 - Cross platform
 - Modern UI
 - Dark mode
-- Console output
+- Console logs
 - Hide in system tray
 - *__And more to come...__*
 
@@ -31,19 +31,16 @@
 
 ## Instructions
 ### Install
-Head over to [Releases](https://github.com/gaeljacquin/media-downloader/releases).
+1. Head over to [Releases](https://github.com/gaeljacquin/media-downloader/releases)
+2. Add [yt-dlp](https://github.com/yt-dlp/yt-dlp/) to PATH
+3. Add [FFmpeg](https://ffmpeg.org/download.html) to PATH (optional)
 
 ### Build
-#### Prerequisites
-* [yt-dlp](https://github.com/yt-dlp/yt-dlp/)
-* [Webview2](https://developer.microsoft.com/en-us/microsoft-edge/webview2) (Windows only, if it's not already installed)
-* [FFmpeg](https://ffmpeg.org/download.html) (optional)
-
-#### Steps
-1. Clone the repository.
-2. Add the [yt-dlp binary](https://github.com/yt-dlp/yt-dlp/releases) to `src/tauri/binaries`.
-3. Rename `yt-dlp` to `yt-dlp-$TARGET`, replacing `$TARGET` with the corresponding platform e.g. `x86_64-pc-windows-msvc` for Windows.
-4. Run `pnpm tauri build --target $TARGET`.
+1. Clone the repository
+2. Add [yt-dlp](https://github.com/yt-dlp/yt-dlp/) to PATH
+3. Add [FFmpeg](https://ffmpeg.org/download.html) to PATH (optional)
+4. Install other [prerequisites](https://tauri.app/v1/guides/getting-started/prerequisites/)
+5. Run the build command
 
 ## Important Notes
 **Builds and installers were (so far) only tested on Windows 11.**

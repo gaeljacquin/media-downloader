@@ -20,7 +20,7 @@ export default function About() {
               />
             </div>
             <div className="grid justify-center">
-              <h1>Media Downloader v0.5.1 by Gaël Jacquin</h1>
+              <h1>Media Downloader v0.7.0 by Gaël Jacquin</h1>
             </div>
             <div className="grid justify-center">
               <h1>yt-dlp GUI wrapper</h1>
