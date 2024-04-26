@@ -5,9 +5,9 @@ interface SettingsStore {
   downloadLocation: string
   setDownloadLocation: (arg0: string) => void
   resetDownloadLocation: () => void
-  terminalFontSize: number
-  setTerminalFontSize: (arg0: number) => void
-  resetTerminalFontSize: () => void
+  logsFontSize: number
+  setLogsFontSize: (arg0: number) => void
+  resetLogsFontSize: () => void
   notifications: boolean
   setNotifications: (arg0: boolean) => void
   resetSettings: () => void
@@ -15,7 +15,7 @@ interface SettingsStore {
 
 export const defaultSettings = {
   downloadLocation: '~/Downloads',
-  terminalFontSize: 16,
+  logsFontSize: 16,
   notifications: true,
 }
 
@@ -30,11 +30,11 @@ const useSettingsStore = create<SettingsStore>()(
         resetDownloadLocation: () => {
           set({ downloadLocation: defaultSettings.downloadLocation });
         },
-        setTerminalFontSize: (newSize: number) => {
-          set({ terminalFontSize: newSize })
+        setLogsFontSize: (newSize: number) => {
+          set({ logsFontSize: newSize })
         },
-        resetTerminalFontSize: () => {
-          set({ terminalFontSize: defaultSettings.terminalFontSize });
+        resetLogsFontSize: () => {
+          set({ logsFontSize: defaultSettings.logsFontSize });
         },
         setNotifications: (toggle: boolean) => {
           set({ notifications: toggle })

@@ -61,11 +61,7 @@
 }
 
 @layer components {
-  .xterm .xterm-viewport {
-    overflow-y: hidden;
-  }
-
-  .xterm .xterm-viewport::-webkit-scrollbar {
-    display: none;
+  .logs-container {
+    @apply w-full h-[70vh] overflow-y-scroll p-4 border-2;
   }
 }
