@@ -11,9 +11,9 @@ export default function About() {
       <div className="relative flex-col items-start gap-8 flex" x-chunk="dashboard-03-chunk-0">
         <div className="grid w-full items-start gap-8">
           <fieldset className="grid gap-8 rounded-lg border p-4">
-            <div className="grid justify-center mt-4">
+            <div className="grid justify-center mt-4 -mb-2">
               <Image
-                src="/images/splashscreen.png"
+                src="/images/logo.png"
                 alt="Media Downloader logo"
                 className="w-64 h-auto"
                 width={0}
