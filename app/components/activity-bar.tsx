@@ -4,13 +4,22 @@ import { icons } from "@/app/components/icons";
 import { Button } from "@/app/components/ui/button";
 import { TooltipTrigger, TooltipContent, Tooltip, TooltipProvider } from "@/app/components/ui/tooltip";
 import { View, useView } from '@/app/contexts/view';
+import useAppInfoStore from '@/app/stores/app-info';
 
 export default function ActivityBar() {
   const { view, switchView } = useView();
+  const { setAppInfo } = useAppInfoStore();
 
   const invokeHideSystemTray = async () => {
     const { invoke } = await import('@tauri-apps/api/tauri');
     await invoke('hide_system_tray');
+  };
+
+  const fetchAppInfo = async () => {
+    const { invoke } = await import('@tauri-apps/api/tauri');
+    const appInfo = await invoke('get_app_info');
+    const parsedAppInfo = JSON.parse(appInfo as string);
+    setAppInfo(parsedAppInfo);
   };
 
   return (
@@ -72,7 +81,12 @@ export default function ActivityBar() {
                 className={`rounded-lg ${view === View.About && 'bg-muted'}`}
                 size="icon"
                 variant="ghost"
-                onClick={() => view !== View.About ? switchView(View.About) : null}
+                onClick={() => {
+                  if (view !== View.About) {
+                    fetchAppInfo();
+                    switchView(View.About);
+                  }
+                }}
               >
                 <icons.InfoCircledIcon className="size-5" />
               </Button>

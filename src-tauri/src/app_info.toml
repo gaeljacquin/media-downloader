@@ -1,0 +1,10 @@
+[package]
+authors = ["Gaël Jacquin"]
+default-run = "app"
+description = "Media Downloader: GUI for yt-dlp"
+edition = "2021"
+license = "GNU General Public License v3.0"
+name = "app"
+repository = "https://github.com/gaeljacquin/media-downloader"
+rust-version = "1.60"
+version = "0.8.0"

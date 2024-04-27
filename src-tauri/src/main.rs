@@ -11,11 +11,13 @@ use serde::{Serialize, Deserialize};
 use std::process::Command;
 
 #[derive(Serialize, Deserialize)]
-struct Info<'a> {
+struct AppInfo<'a> {
   version: &'a str,
   title: &'a str,
   description: &'a str,
   author: &'a str,
+  license: &'a str,
+  repository: &'a str,
 }
 
 #[tauri::command]
@@ -40,18 +42,24 @@ async fn close_splashscreen(window: Window) {
 
 #[tauri::command]
 fn get_app_info() -> std::string::String {
-  let title = "Media Downloader";
-  let cargo_toml = fs::read_to_string("Cargo.toml").expect("Failed to read Cargo.toml");
-  let cargo_toml: Value = toml::from_str(&cargo_toml).expect("Failed to parse Cargo.toml");
-  let version = cargo_toml["package"]["version"].as_str().expect("Version not found");
-  let description = cargo_toml["package"]["description"].as_str().expect("Description not found");
-  let authors = cargo_toml["package"]["authors"].as_array().expect("Authors not found");
+  let app_info = fs::read_to_string("src/app_info.toml").expect("Failed to read app_info.rs");
+  let app_info: Value = toml::from_str(&app_info).expect("Failed to parse app_info.rs");
+  let version = app_info["package"]["version"].as_str().expect("Version not found");
+  let description_plus_title = app_info["package"]["description"].as_str().expect("Description not found");
+  let description_plus_title_parts: Vec<&str> = description_plus_title.splitn(2, ':').collect();
+  let title = description_plus_title_parts[0].trim();
+  let description = description_plus_title_parts[1].trim();
+  let authors = app_info["package"]["authors"].as_array().expect("Authors not found");
   let author = authors.get(0).expect("Author not found").as_str().expect("Author is not a string");
-  let info = Info {
+  let license = app_info["package"]["license"].as_str().expect("License not found");
+  let repository = app_info["package"]["repository"].as_str().expect("Repository not found");
+  let info = AppInfo {
     version,
     title,
     description,
     author,
+    license,
+    repository,
   };
   let data = serde_json::to_string(&info).expect("Failed to serialize data");
 
