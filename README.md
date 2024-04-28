@@ -29,6 +29,8 @@
 
 ![](/screenshots/win11_4.png)
 
+![](/screenshots/win11_5.png)
+
 ## Instructions
 ### Install
 1. Head over to [Releases](https://github.com/gaeljacquin/media-downloader/releases)
