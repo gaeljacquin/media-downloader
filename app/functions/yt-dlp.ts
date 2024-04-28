@@ -12,7 +12,12 @@ export function addOptions(data: HomeForm) {
     res.push(data.saveTo);
   }
 
-  res.push(data.url);
+  if (data.type === 'file') {
+    res.push('-a');
+    res.push(data.file);
+  } else if (data.type === 'url') {
+    res.push(data.url);
+  }
 
   return res;
 }
