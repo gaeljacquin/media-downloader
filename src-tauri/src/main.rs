@@ -5,20 +5,7 @@ use tauri::{
   CustomMenuItem, Manager, SystemTray, SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem, Window, command
 };
 use std::env;
-use std::fs;
-use toml::Value;
-use serde::{Serialize, Deserialize};
 use std::process::Command;
-
-#[derive(Serialize, Deserialize)]
-struct AppInfo<'a> {
-  version: &'a str,
-  title: &'a str,
-  description: &'a str,
-  author: &'a str,
-  license: &'a str,
-  repository: &'a str,
-}
 
 #[tauri::command]
 fn hide_system_tray(window: Window) {
@@ -38,32 +25,6 @@ async fn close_splashscreen(window: Window) {
   }
 
   window.get_window("main").expect("no window labeled 'main' found").show().unwrap();
-}
-
-#[tauri::command]
-fn get_app_info() -> std::string::String {
-  let app_info = fs::read_to_string("src/app-info.toml").expect("Failed to read app-info.toml");
-  let app_info: Value = toml::from_str(&app_info).expect("Failed to parse app-info.toml");
-  let version = app_info["package"]["version"].as_str().expect("Version not found");
-  let description_plus_title = app_info["package"]["description"].as_str().expect("Description not found");
-  let description_plus_title_parts: Vec<&str> = description_plus_title.splitn(2, ':').collect();
-  let title = description_plus_title_parts[0].trim();
-  let description = description_plus_title_parts[1].trim();
-  let authors = app_info["package"]["authors"].as_array().expect("Authors not found");
-  let author = authors.get(0).expect("Author not found").as_str().expect("Author is not a string");
-  let license = app_info["package"]["license"].as_str().expect("License not found");
-  let repository = app_info["package"]["repository"].as_str().expect("Repository not found");
-  let info = AppInfo {
-    version,
-    title,
-    description,
-    author,
-    license,
-    repository,
-  };
-  let data = serde_json::to_string(&info).expect("Failed to serialize data");
-
-  return data;
 }
 
 #[command]
@@ -153,7 +114,7 @@ fn main() {
       }
       _ => {}
     })
-    .invoke_handler(tauri::generate_handler![hide_system_tray, close_splashscreen, get_app_info, check_cmd_in_path])
+    .invoke_handler(tauri::generate_handler![hide_system_tray, close_splashscreen, check_cmd_in_path])
     .run(tauri::generate_context!())
     .expect("error while running tauri application")
   ;

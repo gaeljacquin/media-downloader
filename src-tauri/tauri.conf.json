@@ -49,9 +49,6 @@
       },
       "path": {
         "all": true
-      },
-      "fs": {
-        "scope": ["$RESOURCE/*"]
       }
     },
     "bundle": {
@@ -77,9 +74,7 @@
         "providerShortName": null,
         "signingIdentity": null
       },
-      "resources": [
-        "src/app-info.toml"
-      ],
+      "resources": [],
       "shortDescription": "",
       "targets": "all",
       "windows": {
