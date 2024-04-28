@@ -10,7 +10,9 @@ interface HomeStore {
 }
 
 const defaultFormData = {
+  type: 'url',
   url: '',
+  file: '',
   audioOnly: false,
   saveTo: '',
 }

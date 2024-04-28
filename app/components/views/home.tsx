@@ -21,16 +21,29 @@ import {
   FormItem,
   FormLabel
 } from "@/app/components/ui/form";
+import { Label } from "@/app/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/app/components/ui/radio-group";
 import useSettingsStore from '@/app/stores/settings';
 import useHomeStore from '@/app/stores/home';
 import useLogsStore from '@/app/stores/logs';
 import MDPopover from '@/app/components/md-popover';
 import { misc } from '@/app/functions';
+import { icons } from '@/app/components/icons';
 
 const schema = yup
   .object()
   .shape({
-    url: yup.string().url('Please enter a valid URL').required('URL required'),
+    type: yup.string().required(),
+    url: yup.string().when('type', {
+      is: (val: string) => val === 'url',
+      then: () => yup.string().url('Please enter a valid URL').required('URL required'),
+      otherwise: () => yup.string().optional(),
+    }),
+    file: yup.string().when('type', {
+      is: (val: string) => val === 'file',
+      then: () => yup.string().required('File required'),
+      otherwise: () => yup.string().optional(),
+    }),
     audioOnly: yup.boolean().required(),
     saveTo: yup.string().optional(),
   })
@@ -52,6 +65,11 @@ export default function Home() {
     setValue,
     formState: { errors },
   } = form;
+  const selectedType = watch('type');
+  const types = [
+    { "label": "URL (video or playlist)", "value": "url" },
+    { "label": "File", "value": "file" },
+  ]
 
   const notify = async (outputCode: number | null) => {
     let notificationBody = '';
@@ -97,21 +115,36 @@ export default function Home() {
     return { process, args };
   }
 
+  async function browse() {
+    const open = await (await import('@tauri-apps/api/dialog')).open;
+    const selectedFile = await open({
+      multiple: false,
+      filters: [{
+        name: 'Text files',
+        extensions: ['txt', 'md'],
+      }],
+      defaultPath: await (await import('@tauri-apps/api/path')).homeDir(),
+    });
+
+    selectedFile && misc.replaceWithTilde(selectedFile as string).then(selectedFileTilde => {
+      form.setValue('file', selectedFileTilde);
+      form.trigger('file');
+    });
+  }
+
   const onSubmit: SubmitHandler<HomeForm> = async (data: HomeForm) => {
-    let output;
-    const { invoke } = await import('@tauri-apps/api/tauri');
-    const isCmdInPath: boolean = await invoke('check_cmd_in_path');
-
-    if (!isCmdInPath) {
-      toast.dismiss(toastId.current as Id);
-      toast.error('yt-dlp not found in PATH', toastify.optionSet1);
-      return false;
-    }
-
+    let output
     setClickable(false);
 
     try {
-      const params = ytdlp.addOptions(data);
+      const { invoke } = await import('@tauri-apps/api/tauri');
+      const isCmdInPath: boolean = await invoke('check_cmd_in_path');
+
+      if (!isCmdInPath) {
+        throw('yt-dlp not found in PATH');
+      }
+
+      const params = ytdlp.addOptions(data).filter(param => param !== undefined) as string[];
       const command = new Command('yt-dlp', params, { encoding: 'utf-8' });
 
       command.stdout.on('data', (line) => {
@@ -127,6 +160,8 @@ export default function Home() {
       output = await command.execute();
       notifications && notify(output.code);
     } catch (error) {
+      toast.dismiss(toastId.current as unknown as Id);
+      toast.error((error as Error).message, toastify.optionSet1);
       console.error('Error: ', error);
     } finally {
       if (typeof output?.code === "number") {
@@ -177,7 +212,8 @@ export default function Home() {
 
   useEffect(() => {
     setValue('saveTo', downloadLocation);
-  }, [setValue, downloadLocation]);
+    setValue('type', formData.type);
+  }, [setValue, downloadLocation, formData.type]);
 
   return (
     <>
@@ -189,17 +225,66 @@ export default function Home() {
           >
             <fieldset className="grid gap-8 rounded-lg border p-4">
               <div className="grid gap-3">
-                <legend className="-ml-1 px-1 text-sm font-medium">URL</legend>
-                <Input
-                  id="url"
-                  aria-invalid={errors.url ? "true" : "false"}
-                  className={`form-text-input`}
-                  {...register('url')}
-                  type="text"
-                  placeholder=" "
-                  autoComplete="off"
-                />
-                {errors.url && <span role="alert" className="text-sm font-semibold p-2 rounded bg-white text-red-500">{errors.url.message}</span>}
+                <RadioGroup className="flex items-center space-x-8 mb-2" defaultValue={formData.type} {...register('type')}>
+                  {types.map((type, index) => (
+                    <div {...register('type')} key={type.value + '-' + index}>
+                      <RadioGroupItem value={type.value} id={type.value + "-id"} key={type.value + '-radio'} />
+                      <Label className="ml-2" htmlFor={type.value + "-id"} key={type.value + '-label'}>
+                        {type.label}
+                      </Label>
+                    </div>
+                  ))}
+                </RadioGroup>
+                {selectedType === 'url' && (
+                  <>
+                    <>
+                      <Input
+                        id="url"
+                        aria-invalid={errors.url ? "true" : "false"}
+                        className="form-text-input"
+                        {...register('url')}
+                        type="text"
+                        placeholder=" "
+                        autoComplete="off"
+                      />
+                    </>
+                    {errors.url && (
+                      <span role="alert" className="form-error-message">
+                        <>{errors.url.message}</>
+                      </span>
+                    )}
+                  </>
+                )}
+                {selectedType === 'file' && (
+                  <>
+                    <div className="flex items-center gap-2">
+                      <Input
+                        id="file"
+                        className="form-text-input bg-gray-400"
+                        {...register('file')}
+                        type="label"
+                        placeholder=" "
+                        autoComplete="off"
+                      />
+                      <Button
+                        aria-label="Browse"
+                        className={`rounded border border-gray-300`}
+                        size="icon"
+                        variant="ghost"
+                        type="button"
+                        onClick={() => browse()}
+                      >
+                        <icons.EllipsisIcon className="h-5 w-5" />
+                      </Button>
+                    </div>
+                    {errors.file && (
+                      <span role="alert" className="form-error-message">
+                        <>{errors.file.message}</>
+                      </span>
+                    )}
+                  </>
+                )}
+
               </div>
               <fieldset className="grid gap-8 rounded-lg border p-4">
                 <legend className="-ml-1 px-1 text-sm font-medium">Options</legend>

@@ -1,6 +1,0 @@
-*
-!.gitignore
-!yt-dlp-x86_64-pc-windows-msvc.exe
-!yt-dlp-aarch64-apple-darwin
-!yt-dlp-x86_64-apple-darwin
-!yt-dlp-x86_64-unknown-linux-gnu
