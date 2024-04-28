@@ -42,8 +42,8 @@ async fn close_splashscreen(window: Window) {
 
 #[tauri::command]
 fn get_app_info() -> std::string::String {
-  let app_info = fs::read_to_string("src/app_info.toml").expect("Failed to read app_info.rs");
-  let app_info: Value = toml::from_str(&app_info).expect("Failed to parse app_info.rs");
+  let app_info = fs::read_to_string("src/app-info.toml").expect("Failed to read app-info.toml");
+  let app_info: Value = toml::from_str(&app_info).expect("Failed to parse app-info.toml");
   let version = app_info["package"]["version"].as_str().expect("Version not found");
   let description_plus_title = app_info["package"]["description"].as_str().expect("Description not found");
   let description_plus_title_parts: Vec<&str> = description_plus_title.splitn(2, ':').collect();

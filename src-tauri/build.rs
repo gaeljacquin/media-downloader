@@ -12,7 +12,7 @@ fn main() {
   let package_section_toml = toml::to_string(&package_section)
     .expect("Failed to serialize package section");
   let formatted_content = format!("[package]\n{}", package_section_toml);
-  let generated_rs_path = Path::new("src/app_info.toml");
+  let generated_rs_path = Path::new("src/app-info.toml");
 
   fs::write(generated_rs_path, formatted_content)
     .expect("Failed to write generated Rust source file");
