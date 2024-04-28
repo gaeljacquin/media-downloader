@@ -9,7 +9,7 @@
 </h1>
 
 <h3 align="center">
-  GUI for <a href="https://github.com/yt-dlp/yt-dlp/">yt-dlp</a> (and compatible tools)
+  GUI for <a href="https://github.com/yt-dlp/yt-dlp/">yt-dlp</a>
 </h3>
 
 ## Features
@@ -28,6 +28,8 @@
 ![](/screenshots/win11_3.png)
 
 ![](/screenshots/win11_4.png)
+
+![](/screenshots/win11_5.png)
 
 ## Instructions
 ### Install

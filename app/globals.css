@@ -64,4 +64,8 @@
   .logs-container {
     @apply w-full h-[70vh] overflow-y-scroll p-4 border-2;
   }
+
+  .form-error-message {
+    @apply text-sm font-semibold p-2 rounded bg-white text-red-500 -mt-2 -mb-28
+  }
 }

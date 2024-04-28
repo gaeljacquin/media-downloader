@@ -22,6 +22,7 @@ import {
 } from "@/app/components/ui/form";
 import MDPopover from '@/app/components/md-popover';
 import { icons } from "@/app/components/icons";
+import { misc } from '@/app/functions';
 
 const schema = yup
   .object()
@@ -59,16 +60,6 @@ export default function Settings() {
     reset,
   } = form;
 
-  async function replaceWithTilde(path: string) {
-    const homeDir = await (await import('@tauri-apps/api/path')).homeDir(); // dynamically importing module to fix console error
-
-    if (path.startsWith(homeDir)) {
-      return path.replace(homeDir, '~/').replace('\\', '/');
-    }
-
-    return path;
-  }
-
   async function browse() {
     const open = await (await import('@tauri-apps/api/dialog')).open;
     const selectedDir = await open({
@@ -77,7 +68,7 @@ export default function Settings() {
       defaultPath: await (await import('@tauri-apps/api/path')).homeDir(),
     });
 
-    selectedDir && replaceWithTilde(selectedDir as string).then(selectedDirTilde => {
+    selectedDir && misc.replaceWithTilde(selectedDir as string).then(selectedDirTilde => {
       form.setValue('saveTo', selectedDirTilde);
     });
   }

@@ -3,7 +3,11 @@ type HomeFormOptions = {
   saveTo?: string
 }
 
-export type HomeForm = { url: string } & HomeFormOptions;
+export type HomeForm = HomeFormOptions & {
+  type: string
+  url?: string
+  file?: string
+}
 
 export type SettingsForm = {
   saveTo?: string
