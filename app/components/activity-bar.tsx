@@ -42,7 +42,7 @@ export default function ActivityBar() {
                 variant="ghost"
                 onClick={() => view !== View.Logs ? switchView(View.Logs) : null}
               >
-                <icons.TerminalSquareIcon className="size-5" />
+                <icons.FileClockIcon className="size-5" />
               </Button>
             </TooltipTrigger>
             <TooltipContent side="right" sideOffset={5}>

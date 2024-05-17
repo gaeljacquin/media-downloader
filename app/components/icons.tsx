@@ -63,27 +63,6 @@ function EyeOffIcon(props: Record<string, unknown>) {
   )
 }
 
-function TerminalSquareIcon(props: Record<string, unknown>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="m7 11 2-2-2-2" />
-      <path d="M11 13h4" />
-      <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
-    </svg>
-  )
-}
-
 function InfoCircledIcon(props: Record<string, unknown>) {
   return (
     <svg
@@ -124,11 +103,34 @@ function EllipsisIcon(props: Record<string, unknown>) {
   )
 }
 
+function FileClockIcon(props: Record<string, unknown>) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="lucide lucide-file-clock"
+    >
+      <path d="M16 22h2a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v3"/>
+      <path d="M14 2v4a2 2 0 0 0 2 2h4"/>
+      <circle cx="8" cy="16" r="6"/>
+      <path d="M9.5 17.5 8 16.25V14"/>
+    </svg>
+  )
+}
+
 export const icons = {
   Settings2Icon,
   HomeIcon,
   EyeOffIcon,
-  TerminalSquareIcon,
   InfoCircledIcon,
   EllipsisIcon,
+  FileClockIcon,
 }
