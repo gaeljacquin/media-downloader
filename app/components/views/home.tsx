@@ -141,7 +141,7 @@ export default function Home() {
       const isCmdInPath: boolean = await invoke('check_cmd_in_path');
 
       if (!isCmdInPath) {
-        throw('yt-dlp not found in PATH');
+        throw ('yt-dlp not found in PATH');
       }
 
       const params = ytdlp.addOptions(data).filter(param => param !== undefined) as string[];
@@ -225,73 +225,86 @@ export default function Home() {
           >
             <fieldset className="grid gap-8 rounded-lg border p-4">
               <div className="grid gap-3">
-                <RadioGroup className="flex items-center space-x-8 mb-2" defaultValue={formData.type} {...register('type')}>
+                <RadioGroup
+                  defaultValue={formData.type}
+                  {...register('type')}
+                  className="flex flex-col space-y-1"
+                >
                   {types.map((type, index) => (
-                    <div {...register('type')} key={type.value + '-' + index}>
-                      <RadioGroupItem value={type.value} id={type.value + "-id"} key={type.value + '-radio'} />
-                      <Label className="ml-2" htmlFor={type.value + "-id"} key={type.value + '-label'}>
+                    <FormItem
+                      className="flex items-center space-x-3 space-y-0"
+                      {...register('type')}
+                      key={type.value + '-' + index}
+                    >
+                      <FormControl key={type.value + '-control'}>
+                        <RadioGroupItem value={type.value} id={type.value + "-id"} key={type.value + '-radio'} />
+                      </FormControl>
+                      <FormLabel className="font-normal" htmlFor={type.value + "-id"} key={type.value + '-label'}>
                         {type.label}
-                      </Label>
-                    </div>
+                      </FormLabel>
+                    </FormItem>
                   ))}
                 </RadioGroup>
-                {selectedType === 'url' && (
-                  <>
+                <div className="mt-2">
+                  {selectedType === 'url' && (
                     <>
-                      <Input
-                        id="url"
-                        aria-invalid={errors.url ? "true" : "false"}
-                        className="form-text-input"
-                        {...register('url')}
-                        type="text"
-                        placeholder=" "
-                        autoComplete="off"
-                      />
+                      <>
+                        <Input
+                          id="url"
+                          aria-invalid={errors.url ? "true" : "false"}
+                          className="form-text-input"
+                          {...register('url')}
+                          type="text"
+                          placeholder=" "
+                          autoComplete="off"
+                        />
+                      </>
+                      {errors.url && (
+                        <span role="alert" className="form-error-message">
+                          <>{errors.url.message}</>
+                        </span>
+                      )}
                     </>
-                    {errors.url && (
-                      <span role="alert" className="form-error-message">
-                        <>{errors.url.message}</>
-                      </span>
-                    )}
-                  </>
-                )}
-                {selectedType === 'file' && (
-                  <>
-                    <div className="flex items-center gap-2">
-                      <Input
-                        id="file"
-                        className="form-text-input bg-gray-400"
-                        {...register('file')}
-                        type="label"
-                        placeholder=" "
-                        autoComplete="off"
-                      />
-                      <Button
-                        aria-label="Browse"
-                        className={`rounded border border-gray-300`}
-                        size="icon"
-                        variant="ghost"
-                        type="button"
-                        onClick={() => browse()}
-                      >
-                        <icons.EllipsisIcon className="h-5 w-5" />
-                      </Button>
-                    </div>
-                    {errors.file && (
-                      <span role="alert" className="form-error-message">
-                        <>{errors.file.message}</>
-                      </span>
-                    )}
-                  </>
-                )}
-
+                  )}
+                  {selectedType === 'file' && (
+                    <>
+                      <div className="flex items-center gap-2">
+                        <Input
+                          id="file"
+                          className="form-text-input bg-gray-400"
+                          {...register('file')}
+                          type="label"
+                          placeholder=" "
+                          autoComplete="off"
+                        />
+                        <Button
+                          aria-label="Browse"
+                          className={`rounded border border-gray-300`}
+                          size="icon"
+                          variant="ghost"
+                          type="button"
+                          onClick={() => browse()}
+                        >
+                          <icons.EllipsisIcon className="h-5 w-5" />
+                        </Button>
+                      </div>
+                      {errors.file && (
+                        <span role="alert" className="form-error-message">
+                          <>{errors.file.message}</>
+                        </span>
+                      )}
+                    </>
+                  )}
+                </div>
               </div>
               <fieldset className="grid gap-8 rounded-lg border p-4">
                 <legend className="-ml-1 px-1 text-sm font-medium">Options</legend>
                 <FormField
                   name="audioOnly"
                   render={({ field }) => (
-                    <FormItem className="flex flex-row items-start space-x-2 space-y-0">
+                    <FormItem
+                      className="flex flex-row items-start space-x-2 space-y-0"
+                    >
                       <FormControl>
                         <Checkbox
                           checked={field.value}
@@ -301,7 +314,7 @@ export default function Home() {
                         />
                       </FormControl>
                       <div className="space-y-1 leading-none">
-                        <FormLabel>
+                        <FormLabel htmlFor="audioOnly">
                           Audio only
                         </FormLabel>
                       </div>
