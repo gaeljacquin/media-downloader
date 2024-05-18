@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
+import { misc } from '@/app/functions';
 
 interface LogsStore {
   logs: string
@@ -13,8 +14,9 @@ const useLogsStore = create<LogsStore>()(
   devtools(
     (set, get) => ({
       logs: defaultLogs,
-      setLogs: (newLogs: string) => {
+      setLogs: async (newLogs: string) => {
         const currentLogs = get().logs;
+        newLogs = await misc.replaceWithTilde(newLogs);
         set({ logs: currentLogs + newLogs + '\r\n' });
       },
       resetLogs: () => {
