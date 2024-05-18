@@ -8,7 +8,7 @@ import useSettingsStore from '@/app/stores/settings';
 
 export default function Logs() {
   const logoContainerRef = useRef<HTMLDivElement>(null);
-  const { logs, resetLogs } = useLogsStore();
+  const { logs, resetLogs, counter } = useLogsStore();
   const { logsFontSize } = useSettingsStore();
   const scrollToBottom = () => {
     if (logoContainerRef.current) {
@@ -18,9 +18,9 @@ export default function Logs() {
 
   useEffect(() => {
     scrollToBottom();
-  }, [logs]);
+  }, [counter]);
 
-  const formattedLogs = logs.split('\r\n').map((line, index) => (
+  const formattedLogs = logs.map((line, index) => (
     <Fragment key={index}>
       {line}
       <br />
