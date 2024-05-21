@@ -43,9 +43,9 @@ fn main() {
   let quit_tray = CustomMenuItem::new("quit".to_string(), "Quit");
   let toggle_tray = CustomMenuItem::new("toggle".to_string(), "Hide");
   let tray_menu = SystemTrayMenu::new()
-    .add_item(quit_tray)
-    .add_native_item(SystemTrayMenuItem::Separator)
     .add_item(toggle_tray)
+    .add_native_item(SystemTrayMenuItem::Separator)
+    .add_item(quit_tray)
   ;
   let system_tray = SystemTray::new().with_menu(tray_menu);
 
