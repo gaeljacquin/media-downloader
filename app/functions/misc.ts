@@ -13,7 +13,7 @@ export const handleEscapePress = () => {
 export async function replaceWithTilde(path: string) {
   const homeDir = await (await import('@tauri-apps/api/path')).homeDir(); // dynamically importing module to fix console error
 
-  if (path.startsWith(homeDir)) {
+  if (path.includes(homeDir)) {
     return path.replace(homeDir, '~/').replace(/\\/g, '/');
   }
 
