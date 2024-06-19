@@ -1,6 +1,6 @@
 [package]
 name = "app"
-version = "0.8.1"
+version = "0.8.2"
 description = "Media Downloader: GUI for yt-dlp"
 authors = ["Gaël Jacquin"]
 license = "GNU General Public License v3.0"

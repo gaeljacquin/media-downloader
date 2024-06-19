@@ -3,7 +3,7 @@
   "title": "Media Downloader",
   "description": "GUI for yt-dlp",
   "author": "Gaël Jacquin",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
