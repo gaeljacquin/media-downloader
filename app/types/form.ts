@@ -1,16 +1,17 @@
 type HomeFormOptions = {
-  audioOnly: boolean
-  saveTo?: string
-}
+  audioOnly: boolean;
+  saveTo?: string;
+};
 
 export type HomeForm = HomeFormOptions & {
-  type: string
-  url?: string
-  file?: string
-}
+  type: string;
+  url?: string;
+  file?: string;
+};
 
 export type SettingsForm = {
-  saveTo?: string
-  logsFontSize: number
-  notifications: boolean
-}
+  saveTo?: string;
+  logsFontSize: number;
+  notifications: boolean;
+  language: string;
+};

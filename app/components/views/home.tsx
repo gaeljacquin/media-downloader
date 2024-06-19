@@ -21,7 +21,6 @@ import {
   FormItem,
   FormLabel
 } from "@/app/components/ui/form";
-import { Label } from "@/app/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/app/components/ui/radio-group";
 import useSettingsStore from '@/app/stores/settings';
 import useHomeStore from '@/app/stores/home';

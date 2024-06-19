@@ -1,14 +1,14 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Id, toast } from 'react-toastify';
-import { useForm, type SubmitHandler } from 'react-hook-form';
+import { useForm, Controller, type SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
 import { toastify } from '@/app/constants';
 import { type SettingsForm } from '@/app/types/form';
-import useSettingsStore, { defaultSettings } from '@/app/stores/settings';
+import useSettingsStore, { defaultSettings, locales } from '@/app/stores/settings';
 import { Button } from "@/app/components/ui/button";
 import { Label } from "@/app/components/ui/label";
 import { Input } from "@/app/components/ui/input";
@@ -20,6 +20,8 @@ import {
   FormItem,
   FormLabel
 } from "@/app/components/ui/form";
+import { RadioGroup, RadioGroupItem } from "@/app/components/ui/radio-group";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 import MDPopover from '@/app/components/md-popover';
 import { icons } from "@/app/components/icons";
 import { misc } from '@/app/functions';
@@ -30,6 +32,7 @@ const schema = yup
     saveTo: yup.string().optional(),
     logsFontSize: yup.number().required(),
     notifications: yup.boolean().required(),
+    language: yup.string().required(),
   })
   .required();
 
@@ -45,6 +48,9 @@ export default function Settings() {
     resetLogsFontSize,
     notifications,
     setNotifications,
+    locale,
+    setLocale,
+    resetLocale,
     resetSettings,
   } = useSettingsStore();
 
@@ -52,12 +58,15 @@ export default function Settings() {
     resolver: yupResolver(schema),
     defaultValues: {
       notifications: notifications,
+      language: locale,
     },
   });
   const {
     register,
+    watch,
     handleSubmit,
     reset,
+    setValue,
   } = form;
 
   async function browse() {
@@ -80,6 +89,7 @@ export default function Settings() {
       setDownloadLocation(data.saveTo ?? '');
       setLogsFontSize(data.logsFontSize);
       setNotifications(data.notifications);
+      setLocale(data.language);
       toast.success('Settings saved', toastify.optionSet2);
       setClickable(true);
     } catch (error) {
@@ -161,6 +171,43 @@ export default function Settings() {
                     handleClick={() => {
                       resetLogsFontSize();
                       form.setValue('logsFontSize', defaultSettings.logsFontSize);
+                    }}
+                  />
+                </div>
+              </div>
+              <div className="grid gap-3">
+                <Label htmlFor="locale">Language</Label>
+                <div className="flex items-center gap-2">
+                  <Select
+                    {...register('language', {
+                      value: locale,
+                    })}
+                  >
+                    <SelectTrigger id="locale" className="items-start [&_[data-description]]:hidden">
+                      <SelectValue placeholder="blablabla" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {
+                        Object.entries(locales).map((value, index) => (
+                          <SelectItem key={value[0] + '-' + index} value={value[0]}>
+                            <div className="flex items-start gap-3 font-medium text-foreground">
+                              <div className="grid gap-0.5">
+                                <p>
+                                  {value[1].name}
+                                </p>
+                              </div>
+                            </div>
+                          </SelectItem>
+                        ))
+                      }
+                    </SelectContent>
+                  </Select>
+                  <MDPopover
+                    buttonText="Reset"
+                    buttonClasses=""
+                    handleClick={() => {
+                      resetLocale();
+                      form.setValue('language', defaultSettings.locale);
                     }}
                   />
                 </div>
