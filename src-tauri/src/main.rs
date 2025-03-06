@@ -40,6 +40,7 @@ fn check_cmd_in_path() -> bool {
 }
 
 fn main() {
+  let _ = fix_path_env::fix(); 
   let quit_tray = CustomMenuItem::new("quit".to_string(), "Quit");
   let toggle_tray = CustomMenuItem::new("toggle".to_string(), "Hide");
   let tray_menu = SystemTrayMenu::new()
