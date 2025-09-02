@@ -1,7 +1,13 @@
-import { Settings, Home, Download, FileText } from 'lucide-react';
+import { Settings, Home, Terminal, Info, Minimize2 } from 'lucide-react';
 import { useAppStore } from '../stores/useAppStore';
-import { Button } from './ui/button';
-import { cn } from '../lib/utils';
+import {
+  Menubar,
+  MenubarContent,
+  MenubarItem,
+  MenubarMenu,
+  MenubarTrigger,
+} from './ui/menubar';
+import { invoke } from '@tauri-apps/api/core';
 
 interface HeaderProps {
   onNavigate?: (view: string) => void;
@@ -10,37 +16,61 @@ interface HeaderProps {
 export const Header = ({ onNavigate }: HeaderProps) => {
   const { currentView } = useAppStore();
 
-  const controlItems = [
-    { id: 'home' as const, icon: Home, tooltip: 'Home' },
-    { id: 'logs' as const, icon: Download, tooltip: 'Logs' },
-    { id: 'notes' as const, icon: FileText, tooltip: 'Notes' },
-    { id: 'settings' as const, icon: Settings, tooltip: 'Settings' },
-  ];
+  const handleMinimizeToTray = async () => {
+    try {
+      await invoke('minimize_to_tray');
+    } catch (error) {
+      console.error('Failed to minimize to tray:', error);
+    }
+  };
 
   return (
-    <header className="h-8 bg-gradient-to-b from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800 border-b border-gray-400 dark:border-gray-600 flex items-center justify-center shadow-sm">
-      <div className="flex items-center gap-1 bg-gradient-to-b from-gray-100 to-gray-200 dark:from-gray-600 dark:to-gray-700 border border-gray-400 dark:border-gray-500 rounded px-2 py-0.5 shadow-inner">
-        {controlItems.map((item) => {
-          const Icon = item.icon;
-          return (
-            <Button
-              key={item.id}
-              variant="ghost"
-              size="sm"
-              onClick={() => onNavigate ? onNavigate(item.id) : undefined}
-              className={cn(
-                "h-6 w-6 p-0 rounded border transition-all hover:bg-gray-50 dark:hover:bg-gray-600",
-                currentView === item.id 
-                  ? "bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-500 dark:to-gray-600 border-gray-500 dark:border-gray-400 shadow-inner" 
-                  : "bg-gradient-to-b from-gray-200 to-gray-300 dark:from-gray-600 dark:to-gray-700 border-gray-400 dark:border-gray-500 shadow-sm"
-              )}
-              title={item.tooltip}
+    <header className="h-8 bg-gradient-to-b from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800 border-b border-gray-400 dark:border-gray-600 flex items-center px-2 shadow-sm">
+      <Menubar className="h-6 border-0 bg-transparent shadow-none p-0">
+        <MenubarMenu>
+          <MenubarTrigger className="px-2 py-0 h-6 text-xs">View</MenubarTrigger>
+          <MenubarContent>
+            <MenubarItem 
+              onClick={() => onNavigate?.('home')}
+              className={currentView === 'home' ? 'bg-accent' : ''}
             >
-              <Icon className="h-3 w-3" />
-            </Button>
-          );
-        })}
-      </div>
+              <Home className="h-4 w-4 mr-2" />
+              Home
+            </MenubarItem>
+            <MenubarItem 
+              onClick={() => onNavigate?.('logs')}
+              className={currentView === 'logs' ? 'bg-accent' : ''}
+            >
+              <Terminal className="h-4 w-4 mr-2" />
+              Logs
+            </MenubarItem>
+            <MenubarItem 
+              onClick={() => onNavigate?.('about')}
+              className={currentView === 'about' ? 'bg-accent' : ''}
+            >
+              <Info className="h-4 w-4 mr-2" />
+              About
+            </MenubarItem>
+            <MenubarItem 
+              onClick={() => onNavigate?.('settings')}
+              className={currentView === 'settings' ? 'bg-accent' : ''}
+            >
+              <Settings className="h-4 w-4 mr-2" />
+              Settings
+            </MenubarItem>
+          </MenubarContent>
+        </MenubarMenu>
+        
+        <MenubarMenu>
+          <MenubarTrigger className="px-2 py-0 h-6 text-xs">Window</MenubarTrigger>
+          <MenubarContent>
+            <MenubarItem onClick={handleMinimizeToTray}>
+              <Minimize2 className="h-4 w-4 mr-2" />
+              Minimize to Tray
+            </MenubarItem>
+          </MenubarContent>
+        </MenubarMenu>
+      </Menubar>
     </header>
   );
 };
