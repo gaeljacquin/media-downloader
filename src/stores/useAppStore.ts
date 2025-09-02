@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { AppSettings, DownloadOptions, LogEntry, Note, TempNote } from '../types';
+import { AppSettings, DownloadOptions, Note, TempNote } from '../types';
 
 interface AppState {
   // Settings

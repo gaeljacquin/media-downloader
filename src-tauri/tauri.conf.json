@@ -5,7 +5,7 @@
   "identifier": "com.gael.emdee",
   "build": {
     "beforeDevCommand": "pnpm run dev",
-    "devUrl": "http://localhost:5173",
+    "devUrl": "http://localhost:1420",
     "beforeBuildCommand": "pnpm run build",
     "frontendDist": "../dist"
   },
@@ -35,26 +35,5 @@
       "icons/icon.ico"
     ]
   },
-  "plugins": {
-    "shell": {
-      "open": true,
-      "scope": [
-        {
-          "name": "yt-dlp",
-          "cmd": "yt-dlp",
-          "args": true
-        },
-        {
-          "name": "taskkill",
-          "cmd": "taskkill",
-          "args": true
-        },
-        {
-          "name": "pkill",
-          "cmd": "pkill",
-          "args": true
-        }
-      ]
-    }
-  }
+  "plugins": {}
 }

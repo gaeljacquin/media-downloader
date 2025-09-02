@@ -8,9 +8,8 @@ import { Folder, RotateCcw, Save } from 'lucide-react';
 import { useAppStore } from '../../stores/useAppStore';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
-import { Label } from '../ui/label';
 import { Checkbox } from '../ui/checkbox';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Card, CardContent } from '../ui/card';
 import {
   Form,
   FormControl,

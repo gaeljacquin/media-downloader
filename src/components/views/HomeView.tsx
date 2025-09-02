@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -138,7 +138,7 @@ export const HomeView = () => {
   };
 
   const onSubmit: SubmitHandler<DownloadOptions> = async (data: DownloadOptions) => {
-    let output: { code: number } | undefined;
+    let output: { code: number | null } | undefined;
     setIsDownloading(true);
 
     try {
@@ -162,7 +162,7 @@ export const HomeView = () => {
       });
 
       output = await command.execute();
-      if (settings.enableNotifications) {
+      if (settings.enableNotifications && output) {
         notify(output.code);
       }
     } catch (error) {

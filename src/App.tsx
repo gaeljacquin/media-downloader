@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useAppStore } from './stores/useAppStore';
 import { useTheme } from './hooks/useTheme';
 import { Header } from './components/Header';
