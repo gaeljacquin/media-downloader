@@ -1,15 +1,15 @@
 <h1 align="center">
-  <img src="public/images/splashscreen.png" width="510" alt="Media Downloader logo" />
+  <img src="public/images/splashscreen.png" width="510" alt="Emdee logo" />
 
   <br>
-  Media Downloader
+  Emdee
   <br>
 
-  [![publish](https://github.com/gaeljacquin/media-downloader/actions/workflows/publish.yml/badge.svg)](https://github.com/gaeljacquin/media-downloader/actions/workflows/publish.yml)
+  [![publish](https://github.com/gaeljacquin/emdee/actions/workflows/publish.yml/badge.svg)](https://github.com/gaeljacquin/emdee/actions/workflows/publish.yml)
 </h1>
 
 <h3 align="center">
-  GUI for <a href="https://github.com/yt-dlp/yt-dlp/">yt-dlp</a>
+  A <a href="https://github.com/yt-dlp/yt-dlp/">yt-dlp</a> Frontend
 </h3>
 
 ## Features
@@ -33,7 +33,7 @@
 
 ## Instructions
 ### Install
-1. Head over to [Releases](https://github.com/gaeljacquin/media-downloader/releases)
+1. Head over to [Releases](https://github.com/gaeljacquin/emdee/releases)
 2. Add [yt-dlp](https://github.com/yt-dlp/yt-dlp/) to PATH
 3. Add [FFmpeg](https://ffmpeg.org/download.html) to PATH (optional)
 

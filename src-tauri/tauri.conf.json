@@ -1,116 +1,60 @@
 {
-  "$schema": "../node_modules/@tauri-apps/cli/schema.json",
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Emdee",
+  "version": "0.1.0",
+  "identifier": "com.gael.emdee",
   "build": {
-    "beforeBuildCommand": "pnpm run build",
     "beforeDevCommand": "pnpm run dev",
-    "devPath": "http://localhost:3000",
-    "distDir": "../out"
+    "devUrl": "http://localhost:5173",
+    "beforeBuildCommand": "pnpm run build",
+    "frontendDist": "../dist"
   },
-  "package": {
-    "productName": "Media Downloader",
-    "version": "0.8.2"
-  },
-  "tauri": {
-    "allowlist": {
-      "shell": {
-        "open": true,
-        "execute": true,
-        "scope": [
-          {
-            "name": "yt-dlp",
-            "cmd": "yt-dlp",
-            "args": true
-          },
-          {
-            "name": "win-kill-task",
-            "cmd": "taskkill",
-            "args": true
-          },
-          {
-            "name": "nix-task",
-            "cmd": "pkill",
-            "args": true
-          }
-        ]
-      },
-      "notification": {
-        "all": true
-      },
-      "dialog": {
-        "all": false,
-        "ask": false,
-        "confirm": false,
-        "message": false,
-        "open": true,
-        "save": false
-      },
-      "os": {
-        "all": true
-      },
-      "path": {
-        "all": true
-      }
-    },
-    "bundle": {
-      "active": true,
-      "category": "DeveloperTool",
-      "copyright": "",
-      "deb": {
-        "depends": []
-      },
-      "icon": [
-        "icons/32x32.png",
-        "icons/128x128.png",
-        "icons/128x128@2x.png",
-        "icons/icon.icns",
-        "icons/icon.ico"
-      ],
-      "identifier": "com.media-downloader.tauri",
-      "longDescription": "",
-      "macOS": {
-        "entitlements": null,
-        "exceptionDomain": "",
-        "frameworks": [],
-        "providerShortName": null,
-        "signingIdentity": null
-      },
-      "resources": [],
-      "shortDescription": "",
-      "targets": "all",
-      "windows": {
-        "certificateThumbprint": null,
-        "digestAlgorithm": "sha256",
-        "timestampUrl": ""
-      }
-    },
-    "security": {
-      "csp": null
-    },
-    "updater": {
-      "active": false
-    },
+  "app": {
     "windows": [
       {
-        "label": "splashscreen",
-        "url": "splashscreen.html",
-        "width": 500,
-        "height": 500,
-        "center": true,
-        "decorations": false
-      },
-      {
-        "title": "Media Downloader",
+        "label": "main",
+        "title": "Emdee",
         "width": 1080,
         "height": 720,
-        "titleBarStyle": "Transparent",
-        "visible": false,
         "center": true,
-        "fileDropEnabled": false
+        "resizable": true
       }
     ],
-    "systemTray": {
-      "iconPath": "icons/icon.png",
-      "iconAsTemplate": true
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ]
+  },
+  "plugins": {
+    "shell": {
+      "open": true,
+      "scope": [
+        {
+          "name": "yt-dlp",
+          "cmd": "yt-dlp",
+          "args": true
+        },
+        {
+          "name": "taskkill",
+          "cmd": "taskkill",
+          "args": true
+        },
+        {
+          "name": "pkill",
+          "cmd": "pkill",
+          "args": true
+        }
+      ]
     }
   }
 }
