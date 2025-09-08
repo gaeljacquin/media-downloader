@@ -3,6 +3,7 @@ import { Trash2 } from 'lucide-react';
 import { useAppStore } from '../../stores/useAppStore';
 import { Button } from '../ui/button';
 import { Card, CardContent } from '../ui/card';
+import { ScrollArea } from '../ui/scroll-area';
 
 export const LogsView = () => {
   const { logs, clearLogs, logCounter, settings } = useAppStore();
@@ -10,7 +11,10 @@ export const LogsView = () => {
 
   const scrollToBottom = () => {
     if (logContainerRef.current) {
-      logContainerRef.current.scrollTop = logContainerRef.current.scrollHeight;
+      const scrollArea = logContainerRef.current.closest('[data-radix-scroll-area-viewport]');
+      if (scrollArea) {
+        scrollArea.scrollTop = scrollArea.scrollHeight;
+      }
     }
   };
 
@@ -44,13 +48,15 @@ export const LogsView = () => {
 
       <Card className="h-[calc(100vh-200px)]">
         <CardContent className="p-4 h-full">
-          <div
-            ref={logContainerRef}
-            className="h-full overflow-y-auto bg-black text-white p-4 rounded font-mono text-sm scrollbar-thin scrollbar-track-gray-700 scrollbar-thumb-gray-500 hover:scrollbar-thumb-gray-400"
-            style={{ fontSize: `${settings.logsFontSize}px` }}
-          >
-            <pre className="whitespace-pre-wrap">{formattedLogs}</pre>
-          </div>
+          <ScrollArea className="h-full bg-black rounded">
+            <div
+              ref={logContainerRef}
+              className="bg-black text-white p-4 font-mono text-sm"
+              style={{ fontSize: `${settings.logsFontSize}px` }}
+            >
+              <pre className="whitespace-pre-wrap">{formattedLogs}</pre>
+            </div>
+          </ScrollArea>
         </CardContent>
       </Card>
     </div>

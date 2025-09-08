@@ -35,5 +35,28 @@
       "icons/icon.ico"
     ]
   },
-  "plugins": {}
+  "plugins": {
+    "shell": {
+      "scope": [
+        {
+          "name": "yt-dlp",
+          "cmd": "yt-dlp",
+          "args": true,
+          "sidecar": false
+        },
+        {
+          "name": "taskkill",
+          "cmd": "taskkill",
+          "args": true,
+          "sidecar": false
+        },
+        {
+          "name": "pkill",
+          "cmd": "pkill",
+          "args": true,
+          "sidecar": false
+        }
+      ]
+    }
+  }
 }

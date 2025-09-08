@@ -48,6 +48,12 @@ const schema = z.object({
 function addYtDlpOptions(data: DownloadOptions): string[] {
   const res: string[] = [];
 
+  // Always add progress and verbose flags to ensure output
+  res.push('--progress');
+  res.push('--newline'); 
+  res.push('--no-color');
+  res.push('-v'); // verbose mode
+
   if (data.audioOnly) {
     res.push('-x');
   }
@@ -57,10 +63,10 @@ function addYtDlpOptions(data: DownloadOptions): string[] {
     res.push(data.saveTo);
   }
 
-  if (data.type === 'file') {
+  if (data.type === 'file' && data.file) {
     res.push('-a');
     res.push(data.file);
-  } else if (data.type === 'url') {
+  } else if (data.type === 'url' && data.url) {
     res.push(data.url);
   }
 
@@ -69,6 +75,7 @@ function addYtDlpOptions(data: DownloadOptions): string[] {
 
 export const HomeView = () => {
   const { downloadOptions, updateDownloadOptions, isDownloading, setIsDownloading, addLog, settings } = useAppStore();
+  const isDev = import.meta.env.DEV;
   
   const form = useForm<DownloadOptions>({
     resolver: zodResolver(schema),
@@ -148,18 +155,30 @@ export const HomeView = () => {
         throw new Error('yt-dlp not found in PATH');
       }
 
-      const params = addYtDlpOptions(data).filter(param => param !== undefined) as string[];
+      const params = addYtDlpOptions(data).filter(param => param !== undefined && param !== '') as string[];
       addLog(`Starting download: yt-dlp ${params.join(' ')}`);
+      
+      if (params.length === 0) {
+        throw new Error('No valid parameters provided for yt-dlp command');
+      }
+      
       const command = Command.create('yt-dlp', params);
 
+      // Set up event listeners before spawning
       command.stdout.on('data', (line) => {
-        addLog(`${line}`);
-        console.log(`Stdout: ${line}`);
+        const cleanLine = line.toString().trim();
+        if (cleanLine) {
+          addLog(cleanLine);
+          console.log(`Stdout: ${cleanLine}`);
+        }
       });
 
       command.stderr.on('data', (line) => {
-        addLog(`${line}`);
-        console.log(`Stderr: ${line}`);
+        const cleanLine = line.toString().trim();
+        if (cleanLine) {
+          addLog(cleanLine);
+          console.log(`Stderr: ${cleanLine}`);
+        }
       });
 
       command.on('error', (error) => {
@@ -167,17 +186,24 @@ export const HomeView = () => {
         console.error('Command error:', error);
       });
 
-      output = await command.execute();
-      addLog(`Download completed with exit code: ${output.code}`);
+      command.on('close', (data) => {
+        addLog(`Process exited with code ${data.code} and signal ${data.signal}`);
+        console.log(`Process closed with code ${data.code} and signal ${data.signal}`);
+      });
+
+      // Spawn the process and wait for it to complete
+      const child = await command.spawn();
+      output = await child.wait();
       if (settings.enableNotifications && output) {
         notify(output.code);
       }
     } catch (error) {
       console.error('Error: ', error);
-      addLog(`Error: ${(error as Error).message}\r\n`);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      addLog(`Error: ${errorMessage}\r\n`);
     } finally {
+      setIsDownloading(false);
       if (typeof output?.code === "number") {
-        setIsDownloading(false);
         addLog(`\r\n`);
       }
     }
@@ -185,15 +211,29 @@ export const HomeView = () => {
 
   const onCancel = async () => {
     setIsDownloading(false);
+    addLog('Cancelling download...');
 
     const { process, args } = await getKillProcessByOSType();
     const command = Command.create(process, args);
 
     command.on('close', data => {
+      addLog(`Kill process finished with code ${data.code}`);
       console.log(`command finished with code ${data.code} and signal ${data.signal}`);
     });
 
     await command.execute();
+  };
+
+  const onTestDownload = async () => {
+    const testData: DownloadOptions = {
+      type: 'url',
+      url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+      file: '',
+      audioOnly: false,
+      saveTo: settings.savePath,
+    };
+    
+    await onSubmit(testData);
   };
 
   useEffect(() => {
@@ -338,6 +378,18 @@ export const HomeView = () => {
               >
                 {isDownloading ? 'Downloading...' : 'Download'}
               </Button>
+
+              {isDev && (
+                <Button
+                  type="button"
+                  onClick={onTestDownload}
+                  disabled={isDownloading}
+                  variant="outline"
+                  className="w-full h-12 mt-2"
+                >
+                  Test Download (Rick Roll)
+                </Button>
+              )}
 
               {isDownloading && (
                 <div className="text-center space-y-2">
