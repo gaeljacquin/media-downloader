@@ -21,8 +21,8 @@ interface AppState {
   logCounter: number;
 
   // Navigation
-  currentView: 'home' | 'logs' | 'settings' | 'notes';
-  setCurrentView: (view: 'home' | 'logs' | 'settings' | 'notes') => void;
+  currentView: 'home' | 'logs' | 'settings' | 'about';
+  setCurrentView: (view: 'home' | 'logs' | 'settings' | 'about') => void;
 
   // Notes
   notes: Note[];

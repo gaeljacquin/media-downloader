@@ -3,7 +3,7 @@ import { useTheme } from './hooks/useTheme';
 import { Header } from './components/Header';
 import { HomeView } from './components/views/HomeView';
 import { LogsView } from './components/views/LogsView';
-import { NotesView } from './components/views/NotesView';
+import { AboutView } from './components/views/AboutView';
 import { SettingsView } from './components/views/SettingsView';
 import { Toaster } from './components/ui/sonner';
 import {
@@ -29,8 +29,8 @@ function App() {
         return <HomeView />;
       case 'logs':
         return <LogsView />;
-      case 'notes':
-        return <NotesView />;
+      case 'about':
+        return <AboutView />;
       case 'settings':
         return <SettingsView />;
       default:

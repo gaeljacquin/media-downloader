@@ -149,19 +149,26 @@ export const HomeView = () => {
       }
 
       const params = addYtDlpOptions(data).filter(param => param !== undefined) as string[];
+      addLog(`Starting download: yt-dlp ${params.join(' ')}`);
       const command = Command.create('yt-dlp', params);
 
       command.stdout.on('data', (line) => {
-        addLog(`${line}\r\n`);
+        addLog(`${line}`);
         console.log(`Stdout: ${line}`);
       });
 
       command.stderr.on('data', (line) => {
-        addLog(`${line}\r\n`);
+        addLog(`${line}`);
         console.log(`Stderr: ${line}`);
       });
 
+      command.on('error', (error) => {
+        addLog(`Command error: ${error}`);
+        console.error('Command error:', error);
+      });
+
       output = await command.execute();
+      addLog(`Download completed with exit code: ${output.code}`);
       if (settings.enableNotifications && output) {
         notify(output.code);
       }

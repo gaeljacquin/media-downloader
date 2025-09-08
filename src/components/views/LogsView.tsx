@@ -46,7 +46,7 @@ export const LogsView = () => {
         <CardContent className="p-4 h-full">
           <div
             ref={logContainerRef}
-            className="h-full overflow-y-auto bg-black text-white p-4 rounded font-mono text-sm"
+            className="h-full overflow-y-auto bg-black text-white p-4 rounded font-mono text-sm scrollbar-thin scrollbar-track-gray-700 scrollbar-thumb-gray-500 hover:scrollbar-thumb-gray-400"
             style={{ fontSize: `${settings.logsFontSize}px` }}
           >
             <pre className="whitespace-pre-wrap">{formattedLogs}</pre>
